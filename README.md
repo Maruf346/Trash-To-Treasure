@@ -24,8 +24,8 @@ TrashToTreasure is a waste management and upcycled product marketplace platform.
 
 ## Tech Stack
 - **Backend:** Django (Python)
-- **Frontend:** React.js
-- **Database:** MySQL
+- **Frontend:** HTML, CSS, JavaScript
+- **Database:** sqLite
 - **Authentication:** Django Auth (with role-based access control)
 - **Deployment:** Docker, AWS/Heroku (Planned)
 
