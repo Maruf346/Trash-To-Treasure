@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'marketplace',
     'users',
-    'waste_management',
+
 ]
 
 MIDDLEWARE = [

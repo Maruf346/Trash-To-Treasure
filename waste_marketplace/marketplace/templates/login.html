@@ -1,62 +1,68 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <title>TrashToTreasure - Login</title>
-    <link rel="stylesheet" href="/static/css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | TrashToTreasure</title>
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
 </head>
+
 <body>
-    <div class="container">
-        <!-- Header -->
-        <header>
-            <img src="/static/images/logo.png" alt="TrashToTreasure Logo" class="logo">
-            <button class="signup-btn">Sign Up</button>
-        </header>
 
-        <!-- Login Form -->
-        <div class="login-box">
-            <h2>Log in</h2>
-            <form method="POST" action="/login/">
-                {% csrf_token %}
+    <!-- Logo (Keep it outside the container) -->
+    <div class="logo">
+        <img src="{% static 'images/logo.png' %}" alt="TrashToTreasure Logo">
+        <h1>TrashToTreasure</h1>
+    </div>
 
-                <label>Email address or user name</label>
-                <input type="text" name="username" placeholder="Enter your email or username" required>
+    <!-- Sign Up Button (Keep it outside the container) -->
+    <div class="signup-button">
+        <a href="{% url 'signup' %}">Sign Up</a>
+    </div>
 
-                <label>Password</label>
-                <input type="password" name="password" placeholder="Enter your password" required>
-                <span class="toggle-password">👁️ Hide</span>
+    <!-- Login Container (All other fields go here) -->
+    <div class="login-container">
+        <h2>Login</h2>
 
-                <label for="role">Your Role?</label>
-                <select name="role" id="role">
-                    <option value="admin">Admin</option>
-                    <option value="manager">Manager</option>
-                    <option value="driver">Driver</option>
+        {% if messages %}
+            {% for message in messages %}
+                <p style="color: red;">{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+
+        <form method="post" action="{% url 'login' %}">
+            {% csrf_token %}
+            <div class="input-group">
+                <input type="text" name="username" placeholder="Username" required>
+            </div>
+
+            <div class="input-group">
+                <input type="password" name="password" placeholder="Password" required>
+            </div>
+
+            <div class="dropdown">
+                <label>Your Role?</label>
+                <select name="role" required>
                     <option value="artisan">Artisan</option>
                     <option value="buyer">Buyer</option>
+                    <option value="driver">Driver</option>
+
                 </select>
-
-                <div class="remember-me">
-                    <input type="checkbox" id="remember" name="remember">
-                    <label for="remember">Remember me</label>
-                </div>
-
-                <p>By continuing, you agree to the <a href="#">Terms of use</a> and <a href="#">Privacy Policy</a>.</p>
-
-                <button type="submit" class="login-btn" disabled>Log in</button>
-            </form>
-
-            <a href="/forgot-password/" class="forgot-password">Forgot your password?</a>
-            <p>Don't have an account? <a href="/signup/">Sign up</a></p>
-
-            <!-- Social Logins -->
-            <div class="social-icons">
-                <a href="#" class="social-icon"><i class="fab fa-facebook"></i></a>
-                <a href="#" class="social-icon"><i class="fab fa-apple"></i></a>
-                <a href="#" class="social-icon"><i class="fab fa-google"></i></a>
-                <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
             </div>
+
+            <button type="submit" class="login-btn">Login</button>
+        </form>
+
+        <div class="links">
+            <p>Forgot Password?</p>
+            <p>Don't have an account? <a href="{% url 'signup' %}">Sign Up</a></p>
+            <p><a href="/admin/" class="admin-link">Login as Admin</a></p>
         </div>
     </div>
+
 </body>
+
 </html>

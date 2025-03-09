@@ -16,8 +16,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from marketplace import views
+from marketplace.views import signup_view, login_view
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('login/', views.login_view, name='login'),
+    path('login/', login_view, name='login'),
+    path('signup/', signup_view, name='signup'),  # Ensure this line exists
 ]

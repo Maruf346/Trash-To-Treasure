@@ -1,8 +1,5 @@
 {% load static %}
 
-<img src="{% static 'images/logo.png' %}" alt="TrashToTreasure Logo">
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -30,20 +27,27 @@
             background: #fff;
         }
 
+        /* Logo styling (Top-left corner) */
         .logo {
-            display: flex;
-            align-items: center;
+            position: absolute;
+            top: 0px;
+            left: 10px;
+            display: flex; /* Use flexbox to align items horizontally */
+            align-items: center; /* Vertically align the items in the center */
         }
 
         .logo img {
-            height: 40px;
-            margin-right: 10px;
+            height: 110px;
+            width: 95px;
+            margin-right: 0px;
         }
 
         .logo h1 {
-            font-size: 24px;
+            font-size: 25px;
             font-weight: bold;
             color: #000;
+            margin: 0;
+            font-family: tahoma; 
         }
 
         .nav-links {
