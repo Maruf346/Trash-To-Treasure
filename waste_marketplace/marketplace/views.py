@@ -9,3 +9,6 @@ def signup_view(request):
 
 def home(request):
     return render(request, 'home.html')
+
+def driver_dashboard(request):
+    return render(request, 'driver_dashboard.html')

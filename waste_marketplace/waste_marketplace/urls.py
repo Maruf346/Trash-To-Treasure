@@ -17,10 +17,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from marketplace.views import signup_view, login_view, home
+from marketplace.views import signup_view, login_view, home, driver_dashboard
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('login/', login_view, name='login'),
     path('signup/', signup_view, name='signup'),  
     path('', home, name='home'),  
+    path('driver_dashboard/', driver_dashboard, name='driver_dashboard'),
 ]

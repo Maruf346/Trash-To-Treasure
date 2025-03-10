@@ -1,0 +1,128 @@
+{% load static %}
+{% include "header.html" %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Green-Runner Dashboard</title>
+    <link rel="stylesheet" href="{% static 'css/driver_dashboard.css' %}">
+</head>
+
+<body>
+    <div class="container">
+
+        <!-- Welcome Section -->
+        <div class="welcome-section">
+            <div class="welcome-text">
+                <h1>Welcome!<br>Green-Runner.</h1>
+            </div>
+            <div class="delivery-image">
+                <img src="{% static 'images/delivery-guy.png' %}" alt="Delivery Guy">
+            </div>
+        </div>
+
+        <!-- Schedule Section -->
+        <h2 class="schedule-title">YOUR SCHEDULES</h2>
+        <div class="schedule-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>S/No.</th>
+                        <th>Product</th>
+                        <th>Pickup Point</th>
+                        <th>Drop Point</th>
+                        <th>Date</th>
+                        <th>Delivery Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td><a href="#">Vase "Lavender"</a></td>
+                        <td>P City, Kanchon 1460, Rupganj, Narayanganj.</td>
+                        <td>A City, Dhaka 1245, Mirpur, Dhaka.</td>
+                        <td>12/10/2024</td>
+                        <td>
+                            <select class="status-dropdown" onchange="updateStatus(this)">
+                                <option value="delivered" class="delivered" selected>Delivered</option>
+                                <option value="returned" class="returned">Returned</option>
+                                <option value="on-way" class="on-way">On way</option>
+                                <option value="packed" class="packed">Packed</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td><a href="#">Plastic Pots</a></td>
+                        <td>somewhere, Somecity</td>
+                        <td>Nowhere, Nocity</td>
+                        <td>11/11/2024</td>
+                        <td>
+                            <select class="status-dropdown" onchange="updateStatus(this)">
+                                <option value="delivered" class="delivered" selected>Delivered</option>
+                                <option value="returned" class="returned">Returned</option>
+                                <option value="on-way" class="on-way">On way</option>
+                                <option value="packed" class="packed">Packed</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td><a href="#">Fresh Pots</a></td>
+                        <td>Rupganj, Narayanganj. Kanchon 1460,</td>
+                        <td>Dhaka 1245, Mirpur, Dhaka.</td>
+                        <td>04/12/2024</td>
+                        <td>
+                            <select class="status-dropdown" onchange="updateStatus(this)">
+                                <option value="delivered" class="delivered" selected>Delivered</option>
+                                <option value="returned" class="returned">Returned</option>
+                                <option value="on-way" class="on-way">On way</option>
+                                <option value="packed" class="packed">Packed</option>
+                            </select>
+                        </td>                        
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td><a href="#">Mixed Scraps</a></td>
+                        <td>P City, Kanchon, Narayanganj.</td>
+                        <td>Mirpur 12, Dhaka.</td>
+                        <td>08/12/2024</td>
+                        <td>
+                            <select class="status-dropdown" onchange="updateStatus(this)">
+                                <option value="delivered" class="delivered" selected>Delivered</option>
+                                <option value="returned" class="returned">Returned</option>
+                                <option value="on-way" class="on-way">On way</option>
+                                <option value="packed" class="packed">Packed</option>
+                            </select>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Show More Button -->
+        <div class="show-more">
+            <button>Show More</button>
+        </div>
+
+    </div>
+</body>
+
+</html>
+
+<!-- Custom CSS for status colors -->
+<script>
+    function updateStatus(selectElement) {
+        // Get selected option and value
+        const selectedStatus = selectElement.value;
+
+        // Clear all previous status classes
+        selectElement.className = 'status-dropdown';
+
+        // Add the new status class to apply the correct color
+        selectElement.classList.add(selectedStatus);
+    }
+</script>
