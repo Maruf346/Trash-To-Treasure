@@ -16,9 +16,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from marketplace.views import signup_view, login_view
+
+from marketplace.views import signup_view, login_view, home
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('login/', login_view, name='login'),
-    path('signup/', signup_view, name='signup'),  # Ensure this line exists
+    path('signup/', signup_view, name='signup'),  
+    path('', home, name='home'),  
 ]
