@@ -61,6 +61,8 @@ class UpcycledProduct(models.Model):
     location = models.CharField(max_length=255, default="")
     rating = models.DecimalField(max_digits=3, decimal_places=2, default=0.0)  # e.g., 4.5 rating
     tags = models.CharField(max_length=255, blank=True, null=True)  # Optional field
+    listing_date = models.DateTimeField(auto_now_add=True)  # Automatically sets the date when created
+
 
     def __str__(self):
         return f"{self.product_name} by {self.artisan_name}"
