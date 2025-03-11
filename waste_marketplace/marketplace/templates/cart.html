@@ -1,0 +1,89 @@
+{% load static %}
+{% include "header.html" %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Cart - TrashToTreasure</title>
+    <link rel="stylesheet" href="{% static 'css/cart.css' %}">
+</head>
+
+<body>
+
+    <!-- Cart Banner (Same as Contact Page) -->
+    <section class="cart-banner">
+        <h2>Cart</h2>
+    </section>
+
+    <!-- Main Cart Section -->
+    <div class="cart-container">
+
+        <!-- Cart Table -->
+        <table class="cart-table">
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Subtotal</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="product-info">
+                        <img src="vase.png" alt="Vase">
+                        <span>Vase "Lavender"</span>
+                    </td>
+                    <td>BDT. 12000.00</td>
+                    <td><input type="number" value="1" min="1"></td>
+                    <td>
+                        BDT. 12000.00
+                        <button class="remove-btn">🗑️</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Cart Totals -->
+        <div class="cart-totals">
+            <h3>Cart Totals</h3>
+            <div class="totals-item">
+                <span>Subtotal</span>
+                <span>BDT. 12000.00</span>
+            </div>
+            <div class="totals-item total">
+                <span>Total</span>
+                <span>BDT. 12,000.00</span>
+            </div>
+            <button class="checkout-btn">Check Out</button>
+        </div>
+
+    </div>
+
+    <!-- Footer (Same as Contact Page) -->
+    <footer class="cart-footer">
+        <div class="footer-item">
+            <h4>🌟 High Quality</h4>
+            <p>crafted from top materials</p>
+        </div>
+
+        <div class="footer-item">
+            <h4>🛡️ Warranty Protection</h4>
+            <p>Over 2 years</p>
+        </div>
+
+        <div class="footer-item">
+            <h4>🚚 Free Shipping</h4>
+            <p>Order over 15000/=</p>
+        </div>
+
+        <div class="footer-item">
+            <h4>📞 24/7 Support</h4>
+            <p>Dedicated support</p>
+        </div>
+    </footer>
+
+</body>
+
+</html>
