@@ -38,8 +38,10 @@ body {
 
 /* Cart Table */
 .cart-table {
-    width: 65%;
+    width: 100%;
     border-collapse: collapse;
+    table-layout: fixed;
+    margin-right: 50px;
 }
 
 .cart-table th {
@@ -47,18 +49,22 @@ body {
     padding: 12px;
     text-align: left;
     font-weight: bold;
+    min-width: 150px;
 }
 
 .cart-table td {
     padding: 20px 10px;
     border-bottom: 1px solid #ddd;
+    min-width: 150px;
 }
 
 /* Product Info */
 .product-info {
-    display: flex;
+    flex: 1;
     align-items: center;
     gap: 15px;
+    white-space: nowrap;
+    min-width: 200px;
 }
 
 .product-info img {
