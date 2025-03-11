@@ -21,9 +21,12 @@ body {
 }
 
 .logo img {
-    height: 110px;
-    width: 95px;
+    height: 60px;
+    width: auto;
     margin-right: 0px;
+    margin-top: 10px;
+    transition: margin-top 0.3s;
+    margin-left: 5px;
 }
 
 .logo h1 {

@@ -12,3 +12,6 @@ def home(request):
 
 def driver_dashboard(request):
     return render(request, 'driver_dashboard.html')
+
+def contact(request):
+    return render(request, 'contact.html')
