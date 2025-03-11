@@ -18,3 +18,6 @@ def contact(request):
 
 def cart(request):
     return render(request, 'cart.html')
+
+def about(request):
+    return render(request, 'about.html')
