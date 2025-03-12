@@ -56,6 +56,10 @@ body {
     padding: 20px 10px;
     border-bottom: 1px solid #ddd;
     min-width: 150px;
+    text-align: left;
+    white-space: nowrap; /* Ensures text stays in one line */
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 /* Product Info */
