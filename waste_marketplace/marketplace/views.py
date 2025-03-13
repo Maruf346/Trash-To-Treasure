@@ -60,3 +60,6 @@ def product_listing(request):
         return redirect('product_listing')  # Redirect back after submission
 
     return render(request, 'product_listing.html')
+
+def checkout(request):
+    return render(request, 'checkout.html')
