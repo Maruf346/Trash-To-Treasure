@@ -16,11 +16,10 @@ TrashToTreasure is a waste management and upcycled product marketplace platform.
 - Buyers can purchase products and leave ratings/reviews.
 
 ### **User Roles**
-- **Admin:** Manages user approvals, product verification, and platform settings.
-- **Manager/Employee:** Lists waste materials with prices and details.
+- **Admin:** Manages user approvals, product verification, and platform settings, lists waste materials with prices and details.
 - **Driver/Delivery Guy:** Collects and delivers materials.
 - **Artisan/Crafter:** Purchases waste materials and sells upcycled products.
-- **Buyer:** Purchases upcycled products.
+- **Buyer:** Purchases waste materials or upcycled products.
 
 ## Tech Stack
 - **Backend:** Django (Python)
