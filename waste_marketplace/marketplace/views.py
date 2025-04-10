@@ -8,9 +8,6 @@ from django.contrib.auth.decorators import login_required
 def login_view(request):
     return render(request, 'login.html')
 
-def signup_view(request):
-    return render(request, 'signup.html')
-
 def home(request):
     return render(request, 'home.html')
 

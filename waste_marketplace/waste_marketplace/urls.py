@@ -17,8 +17,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from marketplace.views import signup_view, login_view, home, checkout
+from marketplace.views import login_view, home, checkout
 from marketplace.views import driver_dashboard, contact, cart, about, product_listing
+
+from users.views import signup_view
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('login/', login_view, name='login'),
