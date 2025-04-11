@@ -20,6 +20,8 @@ from marketplace.views import login_view, home, checkout
 from marketplace.views import driver_dashboard, contact, cart, about, product_listing
 from users.views import signup_view, buyer_profile, artisan_profile, driver_profile, driver_profile
 from marketplace.views import logout_view  # Assuming you have a logout view
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -38,3 +40,6 @@ urlpatterns = [
     path('driver_profile/', driver_profile, name='driver_profile'),
 
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

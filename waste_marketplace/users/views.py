@@ -38,7 +38,7 @@ def buyer_profile(request):
 
     if request.method == 'POST':
         user_form = CustomUserForm(request.POST, instance=request.user)
-        profile_form = BuyerProfileForm(request.POST, instance=buyer_profile)
+        profile_form = BuyerProfileForm(request.POST, request.FILES, instance=buyer_profile)  # ← Fixed here
 
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()

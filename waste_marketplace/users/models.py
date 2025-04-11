@@ -61,6 +61,7 @@ class BuyerProfile(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     loyalty_points = models.PositiveIntegerField(default=0)
     order_number = models.PositiveIntegerField(default=0)
-
+    profile_picture = models.ImageField(upload_to='buyer_profiles/', null=True, blank=True)  # ✅ Add this line
+    
     def __str__(self):
         return f"BuyerProfile - {self.user.username}"

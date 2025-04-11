@@ -28,11 +28,15 @@ class CustomUserForm(forms.ModelForm):
         widgets = {
             'username': forms.TextInput(attrs={'readonly': 'readonly'}),  # Make username read-only
         }
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['account_status'].disabled = True  # Makes it uneditable in the form
+
 
 class BuyerProfileForm(forms.ModelForm):
     class Meta:
         model = BuyerProfile
-        fields = ['loyalty_points', 'order_number']
+        fields = ['profile_picture', 'loyalty_points', 'order_number']
         widgets = {
             'loyalty_points': forms.NumberInput(attrs={'readonly': 'readonly'}),
             'order_number': forms.NumberInput(attrs={'readonly': 'readonly'}),
