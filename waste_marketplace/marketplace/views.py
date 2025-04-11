@@ -102,3 +102,30 @@ def product_listing(request):
 
 def checkout(request):
     return render(request, 'checkout.html')
+
+
+#profile_views
+
+@login_required
+def driver_profile(request):
+    if request.user.role != 'driver':
+        return HttpResponseForbidden("Access denied.")
+
+    profile = request.user.driverprofile
+    return render(request, 'driver_profile.html', {'profile': profile})
+
+@login_required
+def artisan_profile(request):
+    if request.user.role != 'artisan':
+        return HttpResponseForbidden("Access denied.")
+
+    profile = request.user.artisanprofile
+    return render(request, 'artisan_profile.html', {'profile': profile})
+
+@login_required
+def buyer_profile(request):
+    if request.user.role != 'buyer':
+        return HttpResponseForbidden("Access denied.")
+
+    profile = request.user.buyerprofile
+    return render(request, 'buyer_profile.html', {'profile': profile})
