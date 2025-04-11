@@ -2,6 +2,7 @@
 # Create your models here.
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from .managers import CustomUserManager
 
 # Choices for role and account status
 ROLE_CHOICES = (
@@ -23,7 +24,9 @@ class CustomUser(AbstractUser):
     role = models.CharField(max_length=10, choices=ROLE_CHOICES)
     account_status = models.CharField(max_length=10, choices=ACCOUNT_STATUS_CHOICES, default='active')
 
-    REQUIRED_FIELDS = ['email', 'name', 'phone', 'role']
+    objects = CustomUserManager()  # ✅ Use your custom manager
+    
+    REQUIRED_FIELDS = ['email']
     USERNAME_FIELD = 'username'
 
     def __str__(self):
