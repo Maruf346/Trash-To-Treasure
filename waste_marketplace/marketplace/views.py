@@ -3,11 +3,31 @@ from .models import UpcycledProduct
 from datetime import date
 from django.contrib.auth.decorators import login_required
 
+from django.contrib.auth import authenticate, login
+from django.contrib import messages
+from users.models import CustomUser  # adjust if needed
 
-# Create your views here.
 def login_view(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        role = request.POST.get('role')
+
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            if user.role == role:
+                login(request, user)
+                return redirect('home')  # or redirect based on role if you want
+            else:
+                messages.error(request, 'Invalid role selected.')
+        else:
+            messages.error(request, 'Invalid username or password.')
+
     return render(request, 'login.html')
 
+
+@login_required
 def home(request):
     return render(request, 'home.html')
 
