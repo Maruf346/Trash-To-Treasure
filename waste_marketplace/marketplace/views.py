@@ -5,6 +5,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from users.models import CustomUser  # adjust if needed
+from django.http import HttpResponseForbidden
+
 
 def login_view(request):
     if request.method == 'POST':
@@ -17,7 +19,10 @@ def login_view(request):
         if user is not None:
             if user.role == role:
                 login(request, user)
-                return redirect('home')  # or redirect based on role if you want
+                if role == 'driver':
+                    return redirect('driver_dashboard')
+                else:
+                    return redirect('home')  # or redirect based on role if you want
             else:
                 messages.error(request, 'Invalid role selected.')
         else:
@@ -34,7 +39,11 @@ def logout_view(request):
 def home(request):
     return render(request, 'home.html')
 
+@login_required
 def driver_dashboard(request):
+    if request.user.role != 'driver':
+        return HttpResponseForbidden("You are not authorized to view this page.")
+
     return render(request, 'driver_dashboard.html')
 
 def contact(request):
