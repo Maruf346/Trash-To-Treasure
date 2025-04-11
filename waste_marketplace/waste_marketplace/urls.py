@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path
 from marketplace.views import login_view, home, checkout
 from marketplace.views import driver_dashboard, contact, cart, about, product_listing
-from users.views import signup_view
+from users.views import signup_view, buyer_profile, artisan_profile, driver_profile, driver_profile
 from marketplace.views import logout_view  # Assuming you have a logout view
 
 urlpatterns = [
@@ -33,4 +33,8 @@ urlpatterns = [
     path('about/', about, name='about'),
     path('product_listing/', product_listing, name='product_listing'),
     path('checkout/', checkout, name='checkout'),
+    path('buyer_profile/', buyer_profile, name='buyer_profile'),  # Buyer profile page
+    path('artisan_profile/', artisan_profile, name='artisan_profile'),
+    path('driver_profile/', driver_profile, name='driver_profile'),
+
 ]
