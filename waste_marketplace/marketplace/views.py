@@ -49,7 +49,11 @@ def driver_dashboard(request):
 def contact(request):
     return render(request, 'contact.html')
 
+@login_required
 def cart(request):
+    if request.user.role == 'driver':
+        return HttpResponseForbidden("You are not authorized to view this page.")
+    
     return render(request, 'cart.html')
 
 def about(request):
