@@ -2,8 +2,7 @@ from django.shortcuts import render, redirect
 from .models import UpcycledProduct
 from datetime import date
 from django.contrib.auth.decorators import login_required
-
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from users.models import CustomUser  # adjust if needed
 
@@ -26,6 +25,10 @@ def login_view(request):
 
     return render(request, 'login.html')
 
+
+def logout_view(request):
+    logout(request)
+    return redirect('login')  # Redirect to login page after logout
 
 @login_required
 def home(request):

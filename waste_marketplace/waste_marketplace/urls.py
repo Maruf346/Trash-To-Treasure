@@ -16,14 +16,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-
 from marketplace.views import login_view, home, checkout
 from marketplace.views import driver_dashboard, contact, cart, about, product_listing
-
 from users.views import signup_view
+from marketplace.views import logout_view  # Assuming you have a logout view
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('login/', login_view, name='login'),
+    path('logout/', logout_view, name='logout'),  # Assuming you have a logout view
     path('signup/', signup_view, name='signup'),  
     path('', home, name='home'),  
     path('driver_dashboard/', driver_dashboard, name='driver_dashboard'),
