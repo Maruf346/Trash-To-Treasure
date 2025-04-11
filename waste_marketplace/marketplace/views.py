@@ -57,6 +57,10 @@ def about(request):
 
 @login_required
 def product_listing(request):
+    # ✅ Allow only artisans
+    if request.user.role != 'artisan':
+        return HttpResponseForbidden("You are not authorized to access this page.")
+    
     if request.method == 'POST':
         product_name = request.POST.get('product_name')
         category = request.POST.get('category')
@@ -68,6 +72,8 @@ def product_listing(request):
         
         # Assuming the logged-in user is the artisan
         artisan_name = request.user.get_full_name()  # Example: Get artisan's name
+        # ✅ Make sure you access the correct artisan profile for shop location
+        artisan_profile = getattr(request.user, 'artisanprofile', None)
         location = request.user.profile.shop_location  # Assuming shop location is in the user's profile
 
         # Create and save the UpcycledProduct instance
