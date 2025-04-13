@@ -39,7 +39,8 @@ class DriverProfile(models.Model):
     delivery_area = models.CharField(max_length=100, blank=True)
     delivery_count = models.PositiveIntegerField(default=0)
     order_number = models.PositiveIntegerField(default=0)
-
+    profile_picture = models.ImageField(upload_to='driver_profiles/', null=True, blank=True)
+    
     def __str__(self):
         return f"DriverProfile - {self.user.username}"
 

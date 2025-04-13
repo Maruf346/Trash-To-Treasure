@@ -3,7 +3,7 @@ from django.contrib import messages
 from .forms import CustomUserSignupForm
 from .models import DriverProfile, ArtisanProfile, BuyerProfile
 from django.contrib.auth.decorators import login_required
-from .forms import BuyerProfileForm, CustomUserForm
+from .forms import BuyerProfileForm, CustomUserForm, DriverProfileForm
 
 def signup_view(request):
     if request.method == 'POST':
@@ -78,11 +78,11 @@ def driver_profile(request):
 
     driver_profile = request.user.driverprofile
     user_form = CustomUserForm(instance=request.user)
-    profile_form = BuyerProfileForm(instance=driver_profile)
+    profile_form = DriverProfileForm(instance=driver_profile)
 
     if request.method == 'POST':
         user_form = CustomUserForm(request.POST, instance=request.user)
-        profile_form = BuyerProfileForm(request.POST, instance=driver_profile)
+        profile_form = DriverProfileForm(request.POST, request.FILES, instance=driver_profile)
 
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
