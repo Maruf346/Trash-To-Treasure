@@ -4,6 +4,10 @@ from .forms import CustomUserSignupForm
 from .models import DriverProfile, ArtisanProfile, BuyerProfile
 from django.contrib.auth.decorators import login_required
 from .forms import BuyerProfileForm, CustomUserForm, DriverProfileForm
+from .models import DriverRating
+from django.db.models import Avg
+from django.shortcuts import get_object_or_404
+
 
 def signup_view(request):
     if request.method == 'POST':
@@ -105,3 +109,29 @@ def driver_profile(request):
         'user_form': user_form,
         'profile_form': profile_form,
     })
+    
+
+@login_required
+def rate_driver(request, driver_id):
+    driver_profile = get_object_or_404(DriverProfile, id=driver_id)
+
+    if request.method == 'POST':
+        rating_value = int(request.POST.get('rating'))
+        review_text = request.POST.get('review', '')
+
+        DriverRating.objects.create(
+            driver=driver_profile,
+            rated_by=request.user,
+            rating=rating_value,
+            review=review_text
+        )
+
+        # ✅ Update average rating
+        avg_rating = DriverRating.objects.filter(driver=driver_profile).aggregate(Avg('rating'))['rating__avg'] or 0
+        driver_profile.rating = round(avg_rating, 1)
+        driver_profile.save()
+
+        messages.success(request, "Rating submitted successfully.")
+        return redirect('home')  # Or wherever makes sense
+
+    return render(request, 'rate_driver.html', {'driver': driver_profile})

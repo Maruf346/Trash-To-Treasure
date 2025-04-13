@@ -42,8 +42,26 @@ class DriverProfile(models.Model):
     profile_picture = models.ImageField(upload_to='driver_profiles/', null=True, blank=True)
     rating = models.FloatField(default=0.0)
     
+    def update_average_rating(self):
+        ratings = self.ratings.all()
+        if ratings.exists():
+            avg = round(sum(r.rating for r in ratings) / ratings.count(), 2)
+            self.rating = avg
+            self.save()
+
+    
     def __str__(self):
         return f"DriverProfile - {self.user.username}"
+
+
+class DriverRating(models.Model):
+    driver = models.ForeignKey(DriverProfile, on_delete=models.CASCADE, related_name='ratings')
+    rated_by = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    rating = models.PositiveIntegerField()  # e.g., 1 to 5
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.rated_by.username} rated {self.driver.user.username} - {self.rating}/5"
 
 
 # Artisan-specific data
