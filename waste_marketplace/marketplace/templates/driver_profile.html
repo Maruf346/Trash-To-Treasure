@@ -64,23 +64,23 @@
 
                 <div class="form-row">
                     <label>Rating (Avg)</label>
-                    <input type="text" value="{{ profile_form.rating }}" readonly>
+                    <input type="text" value="{{ profile_form.instance.rating|floatformat:1 }}" readonly>
                 </div>
 
                 <div class="form-row">
                     <label>Total Deliveries</label>
-                    <input type="text" value="{{ profile_form.total_deliveries }}" readonly>
+                    {{ profile_form.delivery_count }}
                 </div>
 
                 <div class="form-row">
                     <label>Join Date</label>
-                    <input type="text" value="{{ user_form.date_joined }}" readonly>
+                    <input type="text" value="{{ request.user.date_joined }}" readonly>
                 </div>
 
                 <div class="form-row">
-                    <label>Last Login</label>
-                    <input type="text" value="{{ user_form.last_login }}" readonly>
-                </div>
+                    <label for="{{ profile_form.order_number.id_for_label }}">Total Orders</label>
+                    {{ profile_form.order_number }}
+                </div>                
 
                 <div class="form-row">
                     <label>Account Status</label>

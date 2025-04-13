@@ -73,6 +73,11 @@
                         {{ profile_form.order_number }}
                     </div>
 
+                    <div class="form-row">
+                        <label>Account Status</label>
+                        <input type="text" value="{{ user_form.account_status.value }}" readonly>
+                    </div>
+
                     <a href="{% url 'password_change' %}" class="change-password-btn">Change Password</a>
                 
                 </div>

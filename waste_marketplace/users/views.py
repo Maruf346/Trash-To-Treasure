@@ -71,7 +71,8 @@ def artisan_profile(request):
         'user_form': user_form,
         'profile_form': profile_form,
     })
-    
+
+@login_required    
 def driver_profile(request):
     if request.user.role != 'driver':
         return redirect('driver_dashboard')  # Block access if not a driver
@@ -84,10 +85,21 @@ def driver_profile(request):
         user_form = CustomUserForm(request.POST, instance=request.user)
         profile_form = DriverProfileForm(request.POST, request.FILES, instance=driver_profile)
 
+        #if user_form.is_valid() and profile_form.is_valid():
+        #    user_form.save()
+        #    profile_form.save()
+        #    return redirect('driver_profile')  # Refresh the page
+        
         if user_form.is_valid() and profile_form.is_valid():
+            print("Saving user form:", user_form.cleaned_data)
+            print("Saving profile form:", profile_form.cleaned_data)
             user_form.save()
             profile_form.save()
-            return redirect('driver_profile')  # Refresh the page
+            return redirect('driver_profile')
+        else:
+            print("User form errors:", user_form.errors)
+            print("Profile form errors:", profile_form.errors)
+
 
     return render(request, 'driver_profile.html', {
         'user_form': user_form,

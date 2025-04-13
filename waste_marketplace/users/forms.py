@@ -53,9 +53,10 @@ class BuyerProfileForm(forms.ModelForm):
 class DriverProfileForm(forms.ModelForm):
     class Meta:
         model = DriverProfile
-        fields = ['profile_picture', 'delivery_area', 'delivery_count', 'order_number']  # ✅ Add profile_picture
+        fields = ['profile_picture', 'delivery_area', 'delivery_count', 'order_number', 'rating']  # ✅ Add profile_picture
         widgets = {
             'delivery_area': forms.TextInput(attrs={'placeholder': 'Enter delivery area'}),
             'delivery_count': forms.NumberInput(attrs={'readonly': 'readonly'}),
             'order_number': forms.NumberInput(attrs={'readonly': 'readonly'}),
+            'rating': forms.NumberInput(attrs={'readonly': 'readonly'}),
         }
