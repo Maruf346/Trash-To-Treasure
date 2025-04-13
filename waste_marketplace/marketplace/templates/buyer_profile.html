@@ -73,6 +73,9 @@
                         <label for="{{ profile_form.order_number.id_for_label }}">Total Orders</label>
                         {{ profile_form.order_number }}
                     </div>
+
+                    <a href="{% url 'password_change' %}" class="change-password-btn">Change Password</a>
+                
                 </div>
             
                 <div class="button-container">
@@ -89,3 +92,18 @@
 
 </html>
 {% include "footer.html" %}
+
+
+<!-- ok I need these: Profile picture, Username
+
+✅ Email
+
+✅ Phone Number
+
+✅ Full Name
+
+✅ Delivery Area
+
+✅ Ratings (Avg. from buyers, out of 5)
+
+✅ Total Deliveries Completed,  Join Date or Account Created On, Last Login Time, Account Status: Active / Suspended / Deleted.  -->

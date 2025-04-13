@@ -20,6 +20,7 @@ from marketplace.views import login_view, home, checkout
 from marketplace.views import driver_dashboard, contact, cart, about, product_listing
 from users.views import signup_view, buyer_profile, artisan_profile, driver_profile, driver_profile
 from marketplace.views import logout_view  # Assuming you have a logout view
+from django.contrib.auth import views as auth_views
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -38,6 +39,8 @@ urlpatterns = [
     path('buyer_profile/', buyer_profile, name='buyer_profile'),  # Buyer profile page
     path('artisan_profile/', artisan_profile, name='artisan_profile'),
     path('driver_profile/', driver_profile, name='driver_profile'),
+    path('password_change/', auth_views.PasswordChangeView.as_view(template_name='password_change.html'), name='password_change'),
+    path('password_change/done/', auth_views.PasswordChangeDoneView.as_view(template_name='password_change_done.html'), name='password_change_done'),
 
 ]
 

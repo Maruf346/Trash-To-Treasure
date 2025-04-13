@@ -168,3 +168,16 @@ button:hover {
     justify-content: space-between; /* optional, if you want space between filename and "Change" */
 }
 
+.change-password-btn {
+    text-decoration: none;
+    color: white;
+    background-color: #007bff;
+    font-size: 16px;
+    padding: 12px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.change-password-btn:hover {
+    background-color: #0056b3;
+}
