@@ -68,7 +68,7 @@ class ArtisanProfileForm(forms.ModelForm):
         widgets = {
             'bio': forms.Textarea(attrs={
                 'placeholder': 'Tell us about your craft',
-                'rows': 4
+                'rows': 3
             }),
             'location': forms.TextInput(attrs={
                 'placeholder': 'Enter your city/location'
