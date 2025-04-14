@@ -92,7 +92,16 @@
 
     <!-- Navigation Links -->
     <div class="nav-links">
-        <a href="/">Home</a>
+        {% if user.is_authenticated %}
+            {% if user.role == 'driver' %}
+                <a href="{% url 'driver_dashboard' %}">Home</a>
+            {% else %}
+                <a href="{% url 'home' %}">Home</a>
+            {% endif %}
+        {% else %}
+            <a href="{% url 'home' %}">Home</a>
+        {% endif %}
+
         <a href="#">TrashPoints</a>
         <a href="/about/">About</a>
         <a href="/contact/">Contact</a>
