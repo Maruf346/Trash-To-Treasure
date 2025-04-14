@@ -67,10 +67,15 @@ class DriverRating(models.Model):
 # Artisan-specific data
 class ArtisanProfile(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
-    product_category = models.CharField(max_length=100, blank=True)
     bio = models.TextField(blank=True)
-    product_approval_status = models.CharField(max_length=20, choices=[('pending', 'Pending'), ('approved', 'Approved'), ('rejected', 'Rejected')], default='pending')
-    order_number = models.PositiveIntegerField(default=0)
+    profile_picture = models.ImageField(upload_to='artisan_profiles/', null=True, blank=True)  # Added
+    location = models.CharField(max_length=255, blank=True)  # Added
+    # Sales Stats
+    total_sales = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)  # Added
+    product_count = models.PositiveIntegerField(default=0)  # Added: number of products listed
+    rating = models.FloatField(default=0.0)  # Added: average rating out of 5
+    pending_approval_count = models.PositiveIntegerField(default=0)  # Optional
+    order_number = models.PositiveIntegerField(default=0)  # Still keeping this if needed
 
     def __str__(self):
         return f"ArtisanProfile - {self.user.username}"

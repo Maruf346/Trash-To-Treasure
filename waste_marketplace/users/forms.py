@@ -60,3 +60,19 @@ class DriverProfileForm(forms.ModelForm):
             'order_number': forms.NumberInput(attrs={'readonly': 'readonly'}),
             'rating': forms.NumberInput(attrs={'readonly': 'readonly'}),
         }
+
+class ArtisanProfileForm(forms.ModelForm):
+    class Meta:
+        model = ArtisanProfile
+        fields = ['profile_picture', 'bio', 'location']  # include relevant fields only
+        widgets = {
+            'bio': forms.Textarea(attrs={
+                'placeholder': 'Tell us about your craft',
+                'rows': 4
+            }),
+            'location': forms.TextInput(attrs={
+                'placeholder': 'Enter your city/location'
+            }),
+
+        }
+

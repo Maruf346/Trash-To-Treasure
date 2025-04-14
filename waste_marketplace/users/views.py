@@ -7,6 +7,7 @@ from .forms import BuyerProfileForm, CustomUserForm, DriverProfileForm
 from .models import DriverRating
 from django.db.models import Avg
 from django.shortcuts import get_object_or_404
+from .forms import ArtisanProfileForm  # Make sure this import is added at the top
 
 
 def signup_view(request):
@@ -54,27 +55,34 @@ def buyer_profile(request):
         'profile_form': profile_form,
     })
     
+@login_required
 def artisan_profile(request):
     if request.user.role != 'artisan':
         return redirect('home')  # Block access if not an artisan
 
-    artisan_profile = request.user.artisanprofile
+    artisan_profile_instance = request.user.artisanprofile
     user_form = CustomUserForm(instance=request.user)
-    profile_form = BuyerProfileForm(instance=artisan_profile)
+    profile_form = ArtisanProfileForm(instance=artisan_profile_instance)
 
     if request.method == 'POST':
         user_form = CustomUserForm(request.POST, instance=request.user)
-        profile_form = BuyerProfileForm(request.POST, instance=artisan_profile)
+        profile_form = ArtisanProfileForm(request.POST, request.FILES, instance=artisan_profile_instance)
 
         if user_form.is_valid() and profile_form.is_valid():
+            print("Saving user form:", user_form.cleaned_data)
+            print("Saving artisan profile form:", profile_form.cleaned_data)
             user_form.save()
             profile_form.save()
             return redirect('artisan_profile')  # Refresh the page
+        else:
+            print("User form errors:", user_form.errors)
+            print("Artisan profile form errors:", profile_form.errors)
 
     return render(request, 'artisan_profile.html', {
         'user_form': user_form,
         'profile_form': profile_form,
     })
+
 
 @login_required    
 def driver_profile(request):
