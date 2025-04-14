@@ -46,6 +46,7 @@ def driver_dashboard(request):
 
     return render(request, 'driver_dashboard.html')
 
+@login_required
 def contact(request):
     return render(request, 'contact.html')
 
@@ -56,6 +57,7 @@ def cart(request):
     
     return render(request, 'cart.html')
 
+@login_required
 def about(request):
     return render(request, 'about.html')
 
