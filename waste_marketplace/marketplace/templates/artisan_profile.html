@@ -97,7 +97,11 @@
                     <input type="text" value="{{ user_form.account_status.value }}" readonly>
                 </div>
 
-                <a href="{% url 'password_change' %}" class="change-password-btn">Change Password</a>
+                <div class="button-pair">
+                    <a href="{% url 'password_change' %}" class="change-password-btn">Change Password</a>
+                    <a href="{% url 'product_listing' %}" class="listing-btn">List a Product</a>
+                </div>
+
             </div>
 
             <div class="button-container">

@@ -89,7 +89,7 @@ button:hover {
     display: flex;
     justify-content: space-between; /* This will place the buttons side by side */
     gap: 10px; /* Adjust the gap between buttons */
-    margin-top: 20px; /* You can adjust the margin as needed */
+    margin-top: 10px; /* You can adjust the margin as needed */
 }
 
 .button-container button,
@@ -171,7 +171,7 @@ button:hover {
 .change-password-btn {
     text-decoration: none;
     color: white;
-    background-color: #007bff;
+    background-color: #7605e6;
     font-size: 16px;
     padding: 12px;
     border-radius: 5px;
@@ -179,5 +179,38 @@ button:hover {
 }
 
 .change-password-btn:hover {
-    background-color: #0056b3;
+    background-color: #590aae;
+}
+
+.listing-btn {
+    text-decoration: none;
+    color: white;
+    background-color: #8eb403;
+    font-size: 16px;
+    padding: 12px;
+    color: white;
+    font-size: 16px;
+    border-radius: 5px;
+    text-align: center;
+    border: none;
+    cursor: pointer;
+}
+
+.listing-btn:hover {
+    background-color: #8a9803;
+}
+
+.button-pair {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.change-password-btn,
+.listing-btn {
+    flex: 1;
+    text-align: center;
 }

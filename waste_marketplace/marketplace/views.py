@@ -60,6 +60,24 @@ def about(request):
     return render(request, 'about.html')
 
 @login_required
+def listed_products(request):
+    if request.user.role != 'artisan':
+        return HttpResponseForbidden("You are not authorized to view this page.")
+
+    products = UpcycledProduct.objects.filter(artisan_name=request.user.get_full_name())
+    return render(request, 'listed_products.html', {'products': products})
+
+@login_required
+def order_history(request):
+    if request.user.role != 'artisan':
+        return HttpResponseForbidden("You are not authorized to view this page.")
+    
+    # Assuming you have an Order model to fetch order history
+    # orders = Order.objects.filter(buyer=request.user)
+    # return render(request, 'order_history.html', {'orders': orders})
+    return render(request, 'order_history.html')
+
+@login_required
 def product_listing(request):
     # ✅ Allow only artisans
     if request.user.role != 'artisan':
