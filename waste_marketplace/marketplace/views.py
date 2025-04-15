@@ -79,9 +79,7 @@ def order_history(request):
     # return render(request, 'order_history.html', {'orders': orders})
     return render(request, 'order_history.html')
 
-@login_required
 def product_listing(request):
-    # ✅ Allow only artisans
     if request.user.role != 'artisan':
         return HttpResponseForbidden("You are not authorized to access this page.")
     
@@ -93,14 +91,9 @@ def product_listing(request):
         stock_availability = request.POST.get('stock_availability')
         product_images = request.FILES.get('product_images')
         tags = request.POST.get('tags')
-        
-        # Assuming the logged-in user is the artisan
-        artisan_name = request.user.get_full_name()  # Example: Get artisan's name
-        # ✅ Make sure you access the correct artisan profile for shop location
-        artisan_profile = getattr(request.user, 'artisanprofile', None)
-        location = request.user.profile.shop_location  # Assuming shop location is in the user's profile
+        location = request.POST.get('location')  # Or use request.user.artisanprofile.location if set up that way
 
-        # Create and save the UpcycledProduct instance
+        # Create and save the product
         UpcycledProduct.objects.create(
             product_name=product_name,
             category=category,
@@ -109,16 +102,15 @@ def product_listing(request):
             stock_availability=stock_availability,
             product_images=product_images,
             location=location,
-            artisan_name=artisan_name,
-            artisan_contact_info=request.user.email,
             tags=tags,
+            artisan=request.user,
             approval_status=False,  # Pending admin approval
-            listing_date=date.today(),  # Capture the current date
         )
 
-        return redirect('product_listing')  # Redirect back after submission
+        return redirect('product_listing')
 
     return render(request, 'product_listing.html')
+
 
 def checkout(request):
     return render(request, 'checkout.html')
