@@ -80,11 +80,11 @@ class UpcycledProduct(models.Model):
     delivery_status = models.CharField(max_length=20, choices=DELIVERY_STATUS_CHOICES, default='ready')
     slug = models.SlugField(max_length=255, unique=True, blank=True)
 
-def __str__(self):
-    return f"{self.product_name} by {self.artisan.username if self.artisan else 'Unknown'}"
+    def __str__(self):
+        return f"{self.product_name} by {self.artisan.username if self.artisan else 'Unknown'}"
 
-def save(self, *args, **kwargs):
-    if not self.slug:
-        artisan_username = self.artisan.username if self.artisan else 'unknown-artisan'
-        self.slug = slugify(f"{self.product_name}-{artisan_username}")
-    super().save(*args, **kwargs)
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            artisan_username = self.artisan.username if self.artisan else 'unknown-artisan'
+            self.slug = slugify(f"{self.product_name}-{artisan_username}")
+        super().save(*args, **kwargs)
