@@ -81,7 +81,12 @@ class UpcycledProduct(models.Model):
     slug = models.SlugField(max_length=255, unique=True, blank=True)
 
     def __str__(self):
-        return f"{self.product_name} by {self.artisan.username if self.artisan else 'Unknown'}"
+        if self.artisan:
+            # use the custom name field
+          display_name = getattr(self.artisan, 'name', None) or self.artisan.get_full_name() or self.artisan.username
+        else:
+            display_name = "Unknown"
+        return f"{self.product_name} by {display_name}"
 
     def save(self, *args, **kwargs):
         if not self.slug:
