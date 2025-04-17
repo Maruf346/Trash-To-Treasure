@@ -45,7 +45,8 @@ urlpatterns = [
     path('password_change/done/', auth_views.PasswordChangeDoneView.as_view(template_name='password_change_done.html'), name='password_change_done'),
     path('listed_products/', listed_products, name='listed_products'),  # Artisan's listed products
     path('order_history/', order_history, name='order_history'),
-    path('products/<slug:slug>/', views.upcycled_product_details, name='upcycled_product_details'),# Buyer's order history
+    path('products/<slug:slug>/', views.upcycled_product_details, name='upcycled_product_details'),
+    path('upcycled_products/', views.upcycled_products, name='upcycled_products'),
 
 ]
 

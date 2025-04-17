@@ -148,3 +148,9 @@ def buyer_profile(request):
 def upcycled_product_details(request, slug):
     product = get_object_or_404(UpcycledProduct, slug=slug)
     return render(request, 'upcycled_product_details.html', {'product': product})
+
+
+@login_required
+def upcycled_products(request):
+    products = UpcycledProduct.objects.all()
+    return render(request, 'upcycled_products.html', {'products': products})

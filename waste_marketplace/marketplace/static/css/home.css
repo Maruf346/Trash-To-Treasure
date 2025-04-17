@@ -77,8 +77,22 @@ h2 {
     border-radius: 8px;
     cursor: pointer;
     font-size: 14px;
+    text-decoration: none;       /* No underline */
 }
 
 .show-more:hover {
     opacity: 0.8;
+    text-decoration: none;       /* No underline on hover */
+}
+
+a.button-link {
+    text-decoration: none;       /* No underline */
+    color: white;                /* Text color */
+}
+
+a.button-link:visited,
+a.button-link:active,
+a.button-link:hover {
+    color: white;                /* Keep text white always */
+    text-decoration: none;       /* No underline on any state */
 }
