@@ -107,7 +107,7 @@ def product_listing(request):
             approval_status=False,  # Pending admin approval
         )
 
-        return redirect('product_listing')
+        return redirect('artisan_profile')  # Redirect to artisan dashboard or another page
 
     return render(request, 'product_listing.html')
 
