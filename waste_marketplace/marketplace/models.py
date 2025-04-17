@@ -45,7 +45,7 @@ class TrashItem(models.Model):
     # New fields
     slug = models.SlugField(max_length=255, unique=True, blank=True)
     listing_date = models.DateTimeField(auto_now_add=True)
-    last_updated = models.DateTimeField(auto_now=True)
+    last_updated = models.DateTimeField(auto_now=True, null=True, blank=True)
     tags = models.CharField(max_length=255, blank=True, null=True)
 
     def __str__(self):
@@ -75,7 +75,7 @@ class UpcycledProduct(models.Model):
     rating = models.DecimalField(max_digits=3, decimal_places=2, default=0.0)
     tags = models.CharField(max_length=255, blank=True, null=True)
     listing_date = models.DateTimeField(auto_now_add=True)
-    last_updated = models.DateTimeField(auto_now=True)
+    last_updated = models.DateTimeField(auto_now=True, null=True, blank=True)
     sold_count = models.IntegerField(default=0)
     delivery_status = models.CharField(max_length=20, choices=DELIVERY_STATUS_CHOICES, default='ready')
     slug = models.SlugField(max_length=255, unique=True, blank=True)
