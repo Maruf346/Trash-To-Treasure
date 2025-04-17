@@ -1,0 +1,128 @@
+{% load static %}
+{% include "header.html" %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{{ product.product_name }} - TrashToTreasure</title>
+    <link rel="stylesheet" href="{% static 'css/buyer_profile.css' %}">
+    <style>
+        .product-container {
+            max-width: 800px;
+            margin: 30px auto;
+            background-color: #fff;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+
+        .product-image {
+            max-width: 100%;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .product-title {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+
+        .product-meta {
+            font-size: 16px;
+            margin-bottom: 8px;
+            color: #555;
+        }
+
+        .product-price {
+            font-size: 22px;
+            color: #27ae60;
+            font-weight: bold;
+            margin: 15px 0;
+        }
+
+        .product-label {
+            font-weight: 600;
+            color: #34495e;
+        }
+
+        .action-buttons {
+            margin-top: 25px;
+            display: flex;
+            gap: 15px;
+        }
+
+        .action-buttons form {
+            display: inline;
+        }
+
+        .action-buttons button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 12px;
+            background-color: #2c3e50;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .action-buttons button:hover {
+            background-color: #1abc9c;
+        }
+
+        .artisan-link {
+            color: #2980b9;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .artisan-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Banner Section -->
+<section class="product-banner">
+    <h2>{{ product.product_name }}</h2>
+    <p><a href="/">Home</a> > Product Details</p>
+</section>
+
+<!-- Product Detail Section -->
+<div class="product-container">
+    <img src="{{ product.product_images.url }}" alt="{{ product.product_name }}" class="product-image">
+    <h1 class="product-title">{{ product.product_name }}</h1>
+
+    <p class="product-meta">
+        <span class="product-label">By:</span>
+            {{ product.artisan.name }}
+    </p>
+
+    <p class="product-meta"><span class="product-label">Description:</span> {{ product.description }}</p>
+    <p class="product-price">BDT {{ product.price }}</p>
+    <p class="product-meta"><span class="product-label">Category:</span> {{ product.category }}</p>
+    <p class="product-meta"><span class="product-label">Product Status:</span> {{ product.product_status }}</p>
+    <p class="product-meta"><span class="product-label">Stock:</span> {{ product.stock_availability }}</p>
+    <p class="product-meta"><span class="product-label">Units sold:</span> {{ product.sold_count }}</p>
+    <p class="product-meta"><span class="product-label">Location:</span> {{ product.location }}</p>
+    <p class="product-meta"><span class="product-label">Listed on:</span> {{ product.listing_date }}</p>
+    <p class="product-meta"><span class="product-label">Last updated:</span> {{ product.last_updated }}</p>
+
+    <!-- Optional Ratings Section -->
+    <div class="ratings-section" style="margin-top: 30px;">
+        <h3>Customer Ratings</h3>
+        {% for review in product.reviews.all %}
+            <p>{{ review.reviewer.get_full_name }}: {{ review.comment }} ({{ review.rating }}/5)</p>
+        {% empty %}
+            <p>No reviews yet.</p>
+        {% endfor %}
+    </div>
+    
+</div>
+
+</body>
+</html>
+{% include "footer.html" %}

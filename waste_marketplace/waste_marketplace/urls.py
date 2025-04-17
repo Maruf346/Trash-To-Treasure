@@ -24,6 +24,7 @@ from django.contrib.auth import views as auth_views
 from django.conf import settings
 from django.conf.urls.static import static
 from marketplace.views import listed_products, order_history  # Assuming you have a view for listed products
+from marketplace import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -43,7 +44,8 @@ urlpatterns = [
     path('password_change/', auth_views.PasswordChangeView.as_view(template_name='password_change.html'), name='password_change'),
     path('password_change/done/', auth_views.PasswordChangeDoneView.as_view(template_name='password_change_done.html'), name='password_change_done'),
     path('listed_products/', listed_products, name='listed_products'),  # Artisan's listed products
-    path('order_history/', order_history, name='order_history'),  # Buyer's order history
+    path('order_history/', order_history, name='order_history'),
+    path('products/<slug:slug>/', views.upcycled_product_details, name='upcycled_product_details'),# Buyer's order history
 
 ]
 

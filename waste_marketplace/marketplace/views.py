@@ -6,6 +6,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from users.models import CustomUser  # adjust if needed
 from django.http import HttpResponseForbidden
+from django.shortcuts import render, get_object_or_404
 
 
 def login_view(request):
@@ -107,7 +108,7 @@ def product_listing(request):
             approval_status=False,  # Pending admin approval
         )
 
-        return redirect('artisan_profile')  # Redirect to artisan dashboard or another page
+        return redirect('artisan_profile') 
 
     return render(request, 'product_listing.html')
 
@@ -141,3 +142,9 @@ def buyer_profile(request):
 
     profile = request.user.buyerprofile
     return render(request, 'buyer_profile.html', {'profile': profile})
+
+
+@login_required
+def upcycled_product_details(request, slug):
+    product = get_object_or_404(UpcycledProduct, slug=slug)
+    return render(request, 'upcycled_product_details.html', {'product': product})
