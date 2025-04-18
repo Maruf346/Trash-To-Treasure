@@ -70,3 +70,35 @@ button {
 button:hover {
     background: #8a6f3f;
 }
+
+.form-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 2px;
+    text-align: left;
+}
+
+.form-label {
+    flex: 1;
+    font-weight: bold;
+    padding-top: 10px;
+}
+
+.form-input {
+    flex: 2;
+}
+
+.form-input input,
+.form-input textarea,
+.form-input select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.form-input textarea {
+    height: 110px;
+}
+
