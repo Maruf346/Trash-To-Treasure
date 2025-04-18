@@ -108,6 +108,7 @@ def product_listing(request):
             approval_status=False,  # Pending admin approval
         )
 
+        messages.success(request, 'Product listed successfully!')
         return redirect('artisan_profile') 
 
     return render(request, 'product_listing.html')
