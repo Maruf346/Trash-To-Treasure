@@ -71,17 +71,50 @@
             color: #555;
             margin-top: 5px;
         }
+
+        .pagination-wrapper {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin: 30px 0;
+        }
+        
+        .pagination {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .pagination a,
+        .pagination strong {
+            padding: 8px 14px;
+            background-color:rgb(0, 0, 0);
+            color: #fff;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .pagination a:hover {
+            background-color:rgba(0, 0, 0, 0.75);
+        }
+        
+        .pagination strong {
+            background-color: #8a6f3f;
+        }
+        
+        
     </style>
 </head>
 <body>
 
 <section class="product-banner">
-    <h2>All Upcycled Products</h2>
+    <h2>Upcycled Products</h2>
     <p><a href="/">Home</a> > Products</p>
 </section>
 
 <div class="products-grid">
-    {% for product in products %}
+    {% for product in page_obj %}
         <div class="product-card">
             <img src="{{ product.product_images.url }}" alt="{{ product.product_name }}">
             <h3>{{ product.product_name }}</h3>
@@ -91,6 +124,29 @@
         </div>
     {% endfor %}
 </div>
+
+<div class="pagination-wrapper">
+    <div class="pagination">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; First</a>
+            <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+        {% endif %}
+
+        {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+                <strong style="margin: 0 5px;">{{ num }}</strong>
+            {% elif num >= page_obj.number|add:'-2' and num <= page_obj.number|add:'2' %}
+                <a href="?page={{ num }}">{{ num }}</a>
+            {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">Next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a>
+        {% endif %}
+    </div>
+</div>
+
 
 </body>
 </html>

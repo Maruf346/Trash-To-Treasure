@@ -7,7 +7,7 @@ from django.contrib import messages
 from users.models import CustomUser  # adjust if needed
 from django.http import HttpResponseForbidden
 from django.shortcuts import render, get_object_or_404
-
+from django.core.paginator import Paginator
 
 def login_view(request):
     if request.method == 'POST':
@@ -152,5 +152,9 @@ def upcycled_product_details(request, slug):
 
 @login_required
 def upcycled_products(request):
-    products = UpcycledProduct.objects.all()
-    return render(request, 'upcycled_products.html', {'products': products})
+    products = UpcycledProduct.objects.all().order_by('-id')
+    paginator = Paginator(products, 12)  # 12 products per page
+
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'upcycled_products.html', {'page_obj': page_obj})
