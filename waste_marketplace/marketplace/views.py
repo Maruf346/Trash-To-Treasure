@@ -179,5 +179,6 @@ def delete_product(request, pk):
     product = get_object_or_404(UpcycledProduct, pk=pk, artisan=request.user)
     if request.method == 'POST':
         product.delete()
+        messages.success(request, 'Product deleted successfully.')
         return redirect('listed_products')
-    return render(request, 'confirm_delete.html', {'product': product})
+    return redirect('listed_products')
