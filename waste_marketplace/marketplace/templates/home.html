@@ -24,23 +24,13 @@
     <section class="products">
         <h2>Upcycled Products</h2>
         <div class="product-grid">
-            <div class="product-card">
-                <img src="/static/images/vase.png" alt="Plastic Earrings">
-                <p>Plastic Earrings</p>
-                <p class="price">BDT 250.00</p>
-            </div>
-
-            <div class="product-card">
-                <img src="/static/images/vase.png" alt="Vase 'Lavender'">
-                <p>Vase 'Lavender'</p>
-                <p class="price">BDT 400.00</p>
-            </div>
-
-            <div class="product-card">
-                <img src="/static/images/vase.png" alt="Drink Cup">
-                <p>Drink Cup</p>
-                <p class="price">BDT 150.00</p>
-            </div>
+            {% for product in featured_products %}
+                <div class="product-card">
+                    <img src="{{ product.product_images.url }}" alt="{{ product.product_name }}">
+                    <p>{{ product.product_name }}</p>
+                    <p class="price">BDT {{ product.price }}</p>
+                </div>
+            {% endfor %}
         </div>
         <div style="text-align: center; margin: 40px 0;">
             <a href="{% url 'upcycled_products' %}" class="button-link">
@@ -48,6 +38,7 @@
             </a>
         </div>
     </section>
+
 
     <!-- Trash Materials -->
     <section class="materials">

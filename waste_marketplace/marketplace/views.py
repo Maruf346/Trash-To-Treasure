@@ -38,7 +38,8 @@ def logout_view(request):
 
 @login_required
 def home(request):
-    return render(request, 'home.html')
+    featured_products = UpcycledProduct.objects.order_by('-id')[:4]
+    return render(request, 'home.html', {'featured_products': featured_products})
 
 @login_required
 def driver_dashboard(request):
