@@ -107,7 +107,7 @@ def product_listing(request):
             product.approval_status = False
             product.save()
             messages.success(request, "Product listed successfully!")
-            return redirect('artisan_profile')
+            return redirect('listed_products')
     else:
         form = UpcycledProductForm()
 

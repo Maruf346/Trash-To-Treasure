@@ -6,45 +6,9 @@
 <head>
     <title>Artisan Profile - TrashToTreasure</title>
     <link rel="stylesheet" href="{% static 'css/buyer_profile.css' %}">
-    <style>
-        .message-container {
-            text-align: center;
-            margin: 20px auto;
-            width: 80%;
-        }
-        
-        .alert {
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            font-weight: 500;
-            animation: fadeOut 4s forwards;
-        }
-        
-        .alert.success {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-        
-        @keyframes fadeOut {
-            0% { opacity: 1; }
-            75% { opacity: 1; }
-            100% { opacity: 0; display: none; }
-        }
-    </style>
-            
+
 </head>
 <body>
-
-    {% if messages %}
-        <div class="message-container">
-            {% for message in messages %}
-                <div class="alert {{ message.tags }}">{{ message }}</div>
-            {% endfor %}
-        </div>
-    {% endif %}
-
 
 <!-- Banner Section -->
 <section class="product-banner">

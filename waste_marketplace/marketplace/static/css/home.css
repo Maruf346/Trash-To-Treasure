@@ -58,7 +58,8 @@ h2 {
 }
 
 .product-card img, .material-card img {
-    width: 100%;
+    width: fit-content;
+    height: 260px;
     border-radius: 8px;
 }
 

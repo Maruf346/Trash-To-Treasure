@@ -36,8 +36,24 @@
                   {{ form.category }}
                   {{ form.category.errors }}
                 </div>
-              
-                {# …repeat for description, price, stock_availability… #}
+
+                <div class="form-row">
+                  {{ form.description.label_tag }}
+                  {{ form.description }}
+                  {{ form.description.errors }}
+                </div>
+
+                <div class="form-row">
+                  {{ form.price.label_tag }}
+                  {{ form.price }}
+                  {{ form.price.errors }}
+                </div>
+
+                <div class="form-row">
+                  {{ form.stock_availability.label_tag }}
+                  {{ form.stock_availability }}
+                  {{ form.stock_availability.errors }}
+                </div>
               
                 <div class="form-row">
                   {{ form.product_images.label_tag }}
@@ -45,7 +61,17 @@
                   {{ form.product_images.errors }}
                 </div>
               
-                {# location, tags… #}
+                <div class="form-row">
+                  {{ form.location.label_tag }}
+                  {{ form.location }}
+                  {{ form.location.errors }}
+                </div>
+
+                <div class="form-row">
+                  {{ form.tags.label_tag }}
+                  {{ form.tags }}
+                  {{ form.tags.errors }}
+                </div>
               
                 <button type="submit">Submit Product</button>
               </form>
