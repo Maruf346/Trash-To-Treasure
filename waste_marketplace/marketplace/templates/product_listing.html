@@ -21,35 +21,35 @@
     <div class="container">
         <div class="form-section">
             <h2>Product Details</h2>
-            <form action="" method="POST" enctype="multipart/form-data">
+            <form method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
-
-                <label for="product_name">Product Name:</label>
-                <input type="text" id="product_name" name="product_name" required>
-
-                <label for="category">Category:</label>
-                <input type="text" id="category" name="category" required>
-
-                <label for="description">Description:</label>
-                <textarea id="description" name="description" rows="4" required></textarea>
-
-                <label for="price">Price (BDT):</label>
-                <input type="number" id="price" name="price" step="0.01" required>
-
-                <label for="stock_availability">Stock Availability:</label>
-                <input type="number" id="stock_availability" name="stock_availability" min="1" required>
-
-                <label for="product_images">Product Image:</label>
-                <input type="file" id="product_images" name="product_images">
-
-                <label for="location">Location:</label>
-                <input type="text" id="location" name="location" required>
-
-                <label for="tags">Tags (comma-separated):</label>
-                <input type="text" id="tags" name="tags">
-
+                {{ form.non_field_errors }}
+              
+                <div class="form-row">
+                  {{ form.product_name.label_tag }}
+                  {{ form.product_name }}
+                  {{ form.product_name.errors }}
+                </div>
+              
+                <div class="form-row">
+                  {{ form.category.label_tag }}
+                  {{ form.category }}
+                  {{ form.category.errors }}
+                </div>
+              
+                {# …repeat for description, price, stock_availability… #}
+              
+                <div class="form-row">
+                  {{ form.product_images.label_tag }}
+                  {{ form.product_images }}
+                  {{ form.product_images.errors }}
+                </div>
+              
+                {# location, tags… #}
+              
                 <button type="submit">Submit Product</button>
-            </form>
+              </form>
+              
         </div>
     </div>
 

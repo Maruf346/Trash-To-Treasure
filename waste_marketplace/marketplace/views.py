@@ -8,6 +8,8 @@ from users.models import CustomUser  # adjust if needed
 from django.http import HttpResponseForbidden
 from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator
+from .forms import UpcycledProductForm 
+
 
 def login_view(request):
     if request.method == 'POST':
@@ -92,39 +94,24 @@ def order_history(request):
     # return render(request, 'order_history.html', {'orders': orders})
     return render(request, 'order_history.html')
 
+@login_required
 def product_listing(request):
     if request.user.role != 'artisan':
-        return HttpResponseForbidden("You are not authorized to access this page.")
-    
+        return HttpResponseForbidden("Not allowed")
+
     if request.method == 'POST':
-        product_name = request.POST.get('product_name')
-        category = request.POST.get('category')
-        description = request.POST.get('description')
-        price = request.POST.get('price')
-        stock_availability = request.POST.get('stock_availability')
-        product_images = request.FILES.get('product_images')
-        tags = request.POST.get('tags')
-        location = request.POST.get('location')  # Or use request.user.artisanprofile.location if set up that way
+        form = UpcycledProductForm(request.POST, request.FILES)
+        if form.is_valid():
+            product = form.save(commit=False)
+            product.artisan        = request.user
+            product.approval_status = False
+            product.save()
+            messages.success(request, "Product listed successfully!")
+            return redirect('artisan_profile')
+    else:
+        form = UpcycledProductForm()
 
-        # Create and save the product
-        UpcycledProduct.objects.create(
-            product_name=product_name,
-            category=category,
-            description=description,
-            price=price,
-            stock_availability=stock_availability,
-            product_images=product_images,
-            location=location,
-            tags=tags,
-            artisan=request.user,
-            approval_status=False,  # Pending admin approval
-        )
-
-        messages.success(request, 'Product listed successfully!')
-        return redirect('artisan_profile') 
-
-    return render(request, 'product_listing.html')
-
+    return render(request, 'product_listing.html', {'form': form})
 
 def checkout(request):
     return render(request, 'checkout.html')
@@ -171,3 +158,26 @@ def upcycled_products(request):
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     return render(request, 'upcycled_products.html', {'page_obj': page_obj})
+
+
+
+@login_required
+def edit_product(request, pk):
+    product = get_object_or_404(UpcycledProduct, pk=pk, artisan=request.user)
+    if request.method == 'POST':
+        form = UpcycledProductForm(request.POST, request.FILES, instance=product)
+        if form.is_valid():
+            form.save()
+            return redirect('listed_products')
+    else:
+        form = UpcycledProductForm(instance=product)
+    return render(request, 'edit_product.html', {'form': form, 'product': product})
+
+
+@login_required
+def delete_product(request, pk):
+    product = get_object_or_404(UpcycledProduct, pk=pk, artisan=request.user)
+    if request.method == 'POST':
+        product.delete()
+        return redirect('listed_products')
+    return render(request, 'confirm_delete.html', {'product': product})

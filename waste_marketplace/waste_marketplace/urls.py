@@ -47,6 +47,8 @@ urlpatterns = [
     path('order_history/', order_history, name='order_history'),
     path('products/<slug:slug>/', views.upcycled_product_details, name='upcycled_product_details'),
     path('upcycled_products/', views.upcycled_products, name='upcycled_products'),
+    path('product/<int:pk>/edit/', views.edit_product,   name='edit_product'),
+    path('product/<int:pk>/delete/', views.delete_product, name='delete_product'),
 
 ]
 

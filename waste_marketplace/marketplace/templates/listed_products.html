@@ -42,7 +42,7 @@
             color: #555;
         }
 
-        .product-card a {
+        .view-button {
             display: inline-block;
             margin: 10px 0 20px;
             padding: 8px 16px;
@@ -52,7 +52,7 @@
             text-decoration: none;
         }
 
-        .product-card a:hover {
+        .view-button:hover {
             background-color: #8a6f3f;
         }
 
@@ -102,6 +102,34 @@
         .pagination strong {
             background-color: #8a6f3f;
         }
+
+        .button-pair {
+            display: flex;
+            justify-content: center;
+            margin-top: 4px;
+            margin-bottom: 20px;
+        }
+        
+          .button-pair a {
+            text-decoration: none;
+          }
+          .button-pair a:hover {
+            text-decoration: none;
+          }
+
+        .edit-btn, .delete-btn {
+            padding: 6px 12px;
+            border-radius: 5px;
+            text-decoration: none;
+            color: white;
+            font-size: 14px;
+            margin-right: 8px;
+          }
+          .edit-btn   { background-color: #3498db; }
+          .delete-btn { background-color: #e74c3c; }
+          .edit-btn:hover   { background-color: #2980b9; }
+          .delete-btn:hover { background-color: #c0392b; }
+          
         
         
     </style>
@@ -119,7 +147,11 @@
             <img src="{{ product.product_images.url }}" alt="{{ product.product_name }}">
             <h3>{{ product.product_name }}</h3>
             <p><strong>BDT {{ product.price }}</strong></p>
-            <a href="{% url 'upcycled_product_details' product.slug %}">View Details</a>
+            <a href="{% url 'upcycled_product_details' product.slug %}" class="view-button">View Details</a>
+            <div class="button-pair">
+                <a href="{% url 'edit_product'   product.pk %}" class="edit-btn">Edit</a>
+                <a href="{% url 'delete_product' product.pk %}" class="delete-btn">Delete</a>
+            </div>
         </div>
     {% endfor %}
 </div>
