@@ -63,13 +63,24 @@ def cart(request):
 def about(request):
     return render(request, 'about.html')
 
+from django.core.paginator import Paginator
+
 @login_required
 def listed_products(request):
     if request.user.role != 'artisan':
         return HttpResponseForbidden("You are not authorized to view this page.")
 
-    products = UpcycledProduct.objects.filter(artisan_name=request.user.get_full_name())
-    return render(request, 'listed_products.html', {'products': products})
+    products = UpcycledProduct.objects.filter(artisan=request.user)
+
+    # Pagination logic
+    paginator = Paginator(products, 12) # 12 products per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'listed_products.html', {
+        'products': products,  # Keep this if you want to use it elsewhere
+        'page_obj': page_obj   # This is the one your grid uses
+    })
 
 @login_required
 def order_history(request):
