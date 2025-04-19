@@ -227,3 +227,10 @@ def add_to_cart(request, model_name, object_id):
 
     messages.success(request, "Item added to cart!")
     return redirect(request.POST.get('next') or 'upcycled_product_details', slug=product.slug)
+
+
+@login_required
+def remove_from_cart(request, item_id):
+    item = get_object_or_404(CartItem, id=item_id, buyer=request.user)
+    item.delete()
+    return redirect('cart')

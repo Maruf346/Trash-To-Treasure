@@ -31,18 +31,26 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
+                {% for item in cart_items %}
+                  <tr>
                     <td class="product-info">
-                        <span>Vase "Lavender"</span>
+                      <span>{{ item.item.product_name }}</span> <!-- Show item name -->
                     </td>
-                    <td>BDT. 12000.00</td>
-                    <td><input type="number" value="1" min="1"></td>
+                    <td>BDT. {{ item.item.price }}</td>
+                    <td><input type="number" value="{{ item.quantity }}" min="1"></td>
                     <td>
-                        BDT. 12000.00
+                      BDT. {{ item.subtotal }}
+                      <form method="post" action="{% url 'remove_from_cart' item.id %}" style="display:inline;">
+                        {% csrf_token %}
                         <button class="remove-btn">🗑️</button>
+                      </form>
                     </td>
-                </tr>
+                  </tr>
+                {% empty %}
+                  <tr><td colspan="4">Your cart is empty.</td></tr>
+                {% endfor %}
             </tbody>
+              
         </table>
 
         <!-- Cart Totals -->
@@ -50,11 +58,11 @@
             <h3>Cart Totals</h3>
             <div class="totals-item">
                 <span>Subtotal</span>
-                <span>BDT. 12000.00</span>
+                <span>BDT. {{ total }}</span>
             </div>
             <div class="totals-item total">
                 <span>Total</span>
-                <span>BDT. 12,000.00</span>
+                <span>BDT. {{ total }}</span>
             </div>
             <button class="checkout-btn" onclick="location.href='/checkout/'">Check Out</button>
         </div>
