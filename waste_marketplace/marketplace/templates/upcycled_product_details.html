@@ -103,6 +103,37 @@
             {{ product.artisan.name }}
     </p>
 
+    {% if user.is_authenticated and user.role == 'buyer' %}
+        <form method="POST" action="{% url 'add_to_cart' 'upcycledproduct' product.id %}">
+            {% csrf_token %}
+            <div class="quantity-controls">
+                <button type="button" onclick="changeQty(-1)">-</button>
+                <input type="number" name="quantity" id="quantity" value="1" min="1" max="{{ product.stock_availability }}">
+                <button type="button" onclick="changeQty(1)">+</button>
+            </div>
+            <button type="submit">Add to Cart</button>
+            <button type="submit"
+                    formaction="{% url 'cart' %}"
+                    name="buy_now">Buy Now</button>
+            <input type="hidden" name="next" value="{{ request.path }}">
+        </form>
+
+        <script>
+            function changeQty(val) {
+                let input = document.getElementById('quantity');
+                let current = parseInt(input.value);
+                let max = parseInt(input.max);
+                let min = parseInt(input.min);
+                let newVal = current + val;
+                if (newVal >= min && newVal <= max) {
+                    input.value = newVal;
+                }
+            }
+        </script>
+
+    {% endif %}
+
+
     <p class="product-meta"><span class="product-label">Description:</span> {{ product.description }}</p>
     <p class="product-price">BDT {{ product.price }}</p>
     <p class="product-meta"><span class="product-label">Category:</span> {{ product.category }}</p>

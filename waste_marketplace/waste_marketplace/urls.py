@@ -49,6 +49,7 @@ urlpatterns = [
     path('upcycled_products/', views.upcycled_products, name='upcycled_products'),
     path('product/<int:pk>/edit/', views.edit_product,   name='edit_product'),
     path('product/<int:pk>/delete/', views.delete_product, name='delete_product'),
+    path('add-to-cart/<str:model_name>/<int:object_id>/', views.add_to_cart, name='add_to_cart'),
 
 ]
 

@@ -9,6 +9,8 @@ from django.http import HttpResponseForbidden
 from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator
 from .forms import UpcycledProductForm 
+from django.contrib.contenttypes.models import ContentType
+from .models import CartItem
 
 
 def login_view(request):
@@ -58,9 +60,15 @@ def contact(request):
 def cart(request):
     if request.user.role == 'driver':
         return HttpResponseForbidden("You are not authorized to view this page.")
-    
-    return render(request, 'cart.html')
 
+    cart_items = CartItem.objects.filter(buyer=request.user)
+    total = sum(item.subtotal() for item in cart_items)
+    return render(request, 'cart.html', {
+        'cart_items': cart_items,
+        'total': total
+    })
+    
+    
 @login_required
 def about(request):
     return render(request, 'about.html')
@@ -182,3 +190,40 @@ def delete_product(request, pk):
         messages.success(request, 'Product deleted successfully.')
         return redirect('listed_products')
     return redirect('listed_products')
+
+
+# views.py
+
+
+@login_required
+def add_to_cart(request, model_name, object_id):
+    # 1. Identify what model we’re adding
+    ct = get_object_or_404(ContentType, model=model_name)
+    product = get_object_or_404(ct.model_class(), pk=object_id)
+
+    # 2. Role‑based guardrails
+    if request.user.role == 'artisan' and ct.model_class().__name__ != 'TrashMaterial':
+        messages.error(request, "As an Artisan you can only add trash materials to your cart.")
+        return redirect('upcycled_product_details', slug=product.slug)
+
+    if request.user.role not in ('artisan','buyer'):
+        messages.error(request, "Only Buyers or Artisans can add items to cart.")
+        return redirect('upcycled_product_details', slug=product.slug)
+
+    # 3. Quantity from POST, clamped to [1..stock]
+    qty = int(request.POST.get('quantity', 1))
+    qty = max(1, min(qty, product.stock_availability))
+
+    # 4. Create or update
+    cart_item, created = CartItem.objects.get_or_create(
+        buyer=request.user,
+        content_type=ct,
+        object_id=object_id,
+        defaults={'quantity': qty}
+    )
+    if not created:
+        cart_item.quantity = min(cart_item.quantity + qty, product.stock_availability)
+        cart_item.save()
+
+    messages.success(request, "Item added to cart!")
+    return redirect(request.POST.get('next') or 'upcycled_product_details', slug=product.slug)

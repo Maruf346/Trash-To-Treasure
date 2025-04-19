@@ -4,6 +4,9 @@ from django.contrib.auth import get_user_model
 import uuid 
 from django.db import models
 from django.utils.text import slugify
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes.fields import GenericForeignKey
+
 
 User = get_user_model()
 
@@ -93,3 +96,19 @@ class UpcycledProduct(models.Model):
             artisan_username = self.artisan.username if self.artisan else 'unknown-artisan'
             self.slug = slugify(f"{self.product_name}-{artisan_username}")
         super().save(*args, **kwargs)
+
+class CartItem(models.Model):
+    buyer = models.ForeignKey(User, on_delete=models.CASCADE)
+    # Generic link to any product-type model (UpcycledProduct, TrashMaterial, etc.)
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+    item = GenericForeignKey('content_type', 'object_id')
+
+    quantity = models.PositiveIntegerField(default=1)
+    added_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('buyer', 'content_type', 'object_id')
+
+    def subtotal(self):
+        return self.quantity * self.item.price  # works as long as both models have a .price
