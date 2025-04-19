@@ -84,14 +84,19 @@ input[type="number"] {
     border-radius: 5px;
 }
 
-/* Remove Button */
 .remove-btn {
-    border: none;
     background: none;
-    font-size: 18px;
+    border: none;
     cursor: pointer;
-    margin-left: 10px;
+    padding: 5px;
+    transition: transform 0.2s ease;
 }
+
+.remove-btn:hover svg {
+    transform: scale(1.2);
+    fill: #e74c3c;
+}
+
 
 /* Cart Totals */
 .cart-totals {

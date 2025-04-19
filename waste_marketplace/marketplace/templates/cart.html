@@ -42,8 +42,13 @@
                       BDT. {{ item.subtotal }}
                       <form method="post" action="{% url 'remove_from_cart' item.id %}" style="display:inline;">
                         {% csrf_token %}
-                        <button class="remove-btn">🗑️</button>
-                      </form>
+                        <button class="remove-btn" title="Remove from cart">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="18" width="18" viewBox="0 0 24 24" fill="#c0392b">
+                                <path d="M3 6h18v2H3zm3 3h12v12H6zM8 10v10h2V10H8zm4 0v10h2V10h-2z"/>
+                            </svg>
+                        </button>
+                    </form>
+                    
                     </td>
                   </tr>
                 {% empty %}
