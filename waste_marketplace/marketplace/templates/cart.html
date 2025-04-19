@@ -32,12 +32,14 @@
             </thead>
             <tbody>
                 {% for item in cart_items %}
-                  <tr>
+                <tr>
                     <td class="product-info">
-                      <span>{{ item.item.product_name }}</span> <!-- Show item name -->
+                      <span>{{ item.item.product_name }}</span>
                     </td>
                     <td>BDT. {{ item.item.price }}</td>
-                    <td><input type="number" value="{{ item.quantity }}" min="1"></td>
+                    <td>
+                      <input type="number" value="{{ item.quantity }}" min="1" max="{{ item.item.stock_availability }}" disabled>
+                    </td>
                     <td>
                       BDT. {{ item.subtotal }}
                       <form method="post" action="{% url 'remove_from_cart' item.id %}" style="display:inline;">
@@ -47,10 +49,9 @@
                                 <path d="M3 6h18v2H3zm3 3h12v12H6zM8 10v10h2V10H8zm4 0v10h2V10h-2z"/>
                             </svg>
                         </button>
-                    </form>
-                    
+                      </form>
                     </td>
-                  </tr>
+                </tr>
                 {% empty %}
                   <tr><td colspan="4">Your cart is empty.</td></tr>
                 {% endfor %}
