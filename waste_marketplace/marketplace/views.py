@@ -43,7 +43,14 @@ def logout_view(request):
 @login_required
 def home(request):
     featured_products = UpcycledProduct.objects.order_by('-id')[:4]
-    return render(request, 'home.html', {'featured_products': featured_products})
+    featured_trash_items = TrashItem.objects.order_by('-id')[:4]  # or any filter you like
+
+    context = {
+        'featured_products': featured_products,
+        'featured_trash_items': featured_trash_items,
+    }
+    return render(request, 'home.html', context)
+
 
 @login_required
 def driver_dashboard(request):

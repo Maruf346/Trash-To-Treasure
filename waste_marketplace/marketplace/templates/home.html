@@ -44,29 +44,13 @@
     <section class="materials">
         <h2>Trash Materials</h2>
         <div class="material-grid">
-            <div class="material-card">
-                <img src="/static/images/mixed_scrap.png" alt="Tyres">
-                <p>Tyres</p>
-                <p class="price">BDT 1500.00/MT</p>
-            </div>
-
-            <div class="material-card">
-                <img src="/static/images/mixed_scrap.png" alt="Mixed Plastics">
-                <p>Mixed Plastics</p>
-                <p class="price">BDT 700.00/KG</p>
-            </div>
-
-            <div class="material-card">
-                <img src="/static/images/mixed_scrap.png" alt="Al. Plastic Bag">
-                <p>Al. Plastic Bag</p>
-                <p class="price">BDT 700.00/KG</p>
-            </div>
-
-            <div class="material-card">
-                <img src="/static/images/mixed_scrap.png" alt="Mixed Scrap">
-                <p>Mixed Scrap</p>
-                <p class="price">BDT 500.00/MT</p>
-            </div>
+            {% for trash in featured_trash_items %}
+                <div class="material-card">
+                    <img src="{{ trash.images.url }}" alt="{{ trash.name }}">
+                    <p>{{ trash.name }}</p>
+                    <p class="price">BDT {{ trash.price }}</p>
+                </div>
+            {% endfor %}
         </div>
         <div style="text-align: center; margin: 40px 0;">
             <a href="{% url 'trash_item_list' %}" class="button-link">
