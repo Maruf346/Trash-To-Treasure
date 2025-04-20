@@ -212,7 +212,9 @@ def add_to_cart(request, model_name, object_id):
 
     # 3. Quantity from POST, clamped to [1..stock]
     qty = int(request.POST.get('quantity', 1))
-    qty = max(1, min(qty, product.stock_availability))
+    # clamp to product.quantity for trash, or product.stock_availability for upcycled
+    max_stock = getattr(product, 'quantity', None) or product.stock_availability
+    qty = max(1, min(qty, max_stock))
 
     # 4. Create or update
     cart_item, created = CartItem.objects.get_or_create(
@@ -222,7 +224,7 @@ def add_to_cart(request, model_name, object_id):
         defaults={'quantity': qty}
     )
     if not created:
-        cart_item.quantity = min(cart_item.quantity + qty, product.stock_availability)
+        cart_item.quantity = min(cart_item.quantity + qty, max_stock)
         cart_item.save()
 
     messages.success(request, "Item added to cart!")
@@ -231,7 +233,7 @@ def add_to_cart(request, model_name, object_id):
     if action == 'buy':
         return redirect('cart')
     
-    return redirect(request.POST.get('next') or 'upcycled_product_details', slug=product.slug)
+    return redirect(request.POST.get('next'))
 
 
 @login_required
