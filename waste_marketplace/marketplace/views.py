@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import UpcycledProduct
+from .models import UpcycledProduct, TrashItem
 from datetime import date
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
@@ -239,3 +239,17 @@ def remove_from_cart(request, item_id):
     item = get_object_or_404(CartItem, id=item_id, buyer=request.user)
     item.delete()
     return redirect('cart')
+
+
+def trash_item_list(request):
+    items = TrashItem.objects.filter(product_status="active")  # Add filters as needed
+    paginator = Paginator(items, 12)  # Or however many per page
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+    return render(request, "trash_items.html", {"page_obj": page_obj})
+
+
+@login_required
+def trash_item_details(request, slug):
+    product = get_object_or_404(TrashItem, slug=slug)
+    return render(request, 'trash_item_details.html', {'product': product})
