@@ -242,7 +242,7 @@
       </div>
   
       <!-- RIGHT: FORM -->
-      {% if user.is_authenticated and user.role == 'buyer' %}
+      {% if user.is_authenticated and user.role == 'buyer' or user.is_authenticated and user.role == 'artisan' %}
       <div class="right-column">
         <form method="POST" action="{% url 'add_to_cart' 'trashitem' product.id %}">
           {% csrf_token %}

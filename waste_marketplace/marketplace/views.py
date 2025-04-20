@@ -202,13 +202,23 @@ def add_to_cart(request, model_name, object_id):
     product = get_object_or_404(ct.model_class(), pk=object_id)
 
     # 2. Role‑based guardrails
-    if request.user.role == 'artisan' and ct.model_class().__name__ != 'TrashMaterial':
+    if request.user.role == 'artisan' and ct.model_class().__name__ != 'TrashItem':
         messages.error(request, "As an Artisan you can only add trash materials to your cart.")
-        return redirect('upcycled_product_details', slug=product.slug)
+        # Determine which detail view to redirect to based on product type
+        if isinstance(product, TrashItem):
+            return redirect('trash_item_details', slug=product.slug)
+        else:
+            return redirect('upcycled_product_details', slug=product.slug)
+
 
     if request.user.role not in ('artisan','buyer'):
         messages.error(request, "Only Buyers or Artisans can add items to cart.")
-        return redirect('upcycled_product_details', slug=product.slug)
+        # Determine which detail view to redirect to based on product type
+        if isinstance(product, TrashItem):
+            return redirect('trash_item_details', slug=product.slug)
+        else:
+            return redirect('upcycled_product_details', slug=product.slug)
+
 
     # 3. Quantity from POST, clamped to [1..stock]
     qty = int(request.POST.get('quantity', 1))
