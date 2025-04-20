@@ -35,9 +35,17 @@
                 <tr>
                     <td class="product-info">
                       <span>
-                        <a href="{% url 'upcycled_product_details' slug=item.item.slug %}">
-                            {{ item.item.product_name }}
-                        </a>
+                        {% if item.content_type.model == 'upcycledproduct' %}
+                            <a href="{% url 'upcycled_product_details' slug=item.item.slug %}">
+                                {{ item.item.product_name }}
+                            </a>
+                        {% elif item.content_type.model == 'trashitem' %}
+                            <a href="{% url 'trash_item_details' slug=item.item.slug %}">
+                                {{ item.item.material_name }}
+                            </a>
+                        {% else %}
+                            Unknown Item
+                        {% endif %}
                       </span>
                     </td>
                     <td>BDT. {{ item.item.price }}</td>
