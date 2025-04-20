@@ -226,6 +226,11 @@ def add_to_cart(request, model_name, object_id):
         cart_item.save()
 
     messages.success(request, "Item added to cart!")
+    
+    action = request.POST.get('action')
+    if action == 'buy':
+        return redirect('cart')
+    
     return redirect(request.POST.get('next') or 'upcycled_product_details', slug=product.slug)
 
 

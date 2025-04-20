@@ -254,8 +254,8 @@
           </div>
   
           <div class="purchase-buttons">
-            <button type="submit" class="add-to-cart">Add to Cart</button>
-            <button type="submit" formaction="{% url 'cart' %}" name="buy_now" class="buy-now">Buy Now</button>
+            <button type="submit" name="action" value="add" class="add-to-cart">Add to Cart</button>
+            <button type="submit" name="action" value="buy" class="buy-now">Buy Now</button>
           </div>          
   
           <input type="hidden" name="next" value="{{ request.path }}">
