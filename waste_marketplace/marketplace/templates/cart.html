@@ -34,7 +34,11 @@
                 {% for item in cart_items %}
                 <tr>
                     <td class="product-info">
-                      <span>{{ item.item.product_name }}</span>
+                      <span>
+                        <a href="{% url 'upcycled_product_details' slug=item.item.slug %}">
+                            {{ item.item.product_name }}
+                        </a>
+                      </span>
                     </td>
                     <td>BDT. {{ item.item.price }}</td>
                     <td>
