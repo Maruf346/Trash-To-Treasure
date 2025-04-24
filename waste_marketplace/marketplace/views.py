@@ -349,15 +349,54 @@ def initiate_payment(request):
         # Redirect user to SSLCOMMERZ payment page
         return redirect(response['GatewayPageURL'])
     
-    
+
+def redirect_with_message(message):
+    return HttpResponse(f"""
+        <html>
+            <head>
+                <meta charset="UTF-8">
+                <title>Redirecting...</title>
+                <script>
+                    setTimeout(function() {{
+                        window.location.href = '/';
+                    }}, 3000); // Redirects after 3 seconds
+                </script>
+                <style>
+                    body {{
+                        font-family: Arial, sans-serif;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        height: 100vh;
+                        background-color: #f4f4f4;
+                    }}
+                    .message {{
+                        padding: 20px;
+                        background: white;
+                        border-radius: 10px;
+                        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+                        font-size: 18px;
+                        color: #333;
+                    }}
+                </style>
+            </head>
+            <body>
+                <div class="message">{message} Redirecting to homepage...</div>
+            </body>
+        </html>
+    """)
+
+@csrf_exempt
 def payment_success(request):
-    return HttpResponse("Payment successful!")
+    return redirect_with_message("✅ Payment successful!")
 
+@csrf_exempt
 def payment_fail(request):
-    return HttpResponse("Payment failed.")
+    return redirect_with_message("❌ Payment failed.")
 
+@csrf_exempt
 def payment_cancel(request):
-    return HttpResponse("Payment canceled.")
+    return redirect_with_message("⚠️ Payment canceled.")
 
 @csrf_exempt
 def payment_ipn(request):
