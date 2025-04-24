@@ -10,11 +10,12 @@ from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator
 from .forms import UpcycledProductForm 
 from django.contrib.contenttypes.models import ContentType
-from .models import CartItem
+from .models import CartItem, Order, OrderItem
 from django.views.decorators.csrf import csrf_exempt
 from sslcommerz_lib import SSLCOMMERZ 
 from django.http import HttpResponse
 from django.contrib.contenttypes.models import ContentType
+from decimal import Decimal
 
 def login_view(request):
     if request.method == 'POST':
@@ -297,13 +298,49 @@ def checkout_view(request):
 
 
 
-@csrf_exempt  # optional, depends on SSLCommerz requirements
+@csrf_exempt
 def place_order(request):
     if request.method == "POST":
-        # You will handle order placement logic here
-        return redirect('order_success')  # temporary redirection
-    else:
-        return redirect('checkout')
+        cart_items = CartItem.objects.filter(buyer=request.user)
+        if not cart_items.exists():
+            return redirect_with_message("Your cart is empty.")
+
+        # Calculate subtotal
+        subtotal = sum(item.subtotal() for item in cart_items)
+
+        # Create order
+        order = Order.objects.create(
+            buyer=request.user,
+            first_name=request.POST.get("first_name"),
+            last_name=request.POST.get("last_name"),
+            company=request.POST.get("company"),
+            country=request.POST.get("country"),
+            street_address=request.POST.get("street_address"),
+            city=request.POST.get("city"),
+            state=request.POST.get("state"),
+            zip_code=request.POST.get("zip"),
+            phone=request.POST.get("phone"),
+            email=request.POST.get("email"),
+            payment_method=request.POST.get("payment_method"),
+            total_amount=Decimal(subtotal),
+        )
+
+        # Create OrderItems
+        for item in cart_items:
+            OrderItem.objects.create(
+                order=order,
+                content_type=item.content_type,
+                object_id=item.object_id,
+                quantity=item.quantity,
+                price=item.item.price
+            )
+
+        # Clear user's cart
+        cart_items.delete()
+
+        return redirect('order_success')
+
+    return redirect('checkout')
 
 
 def order_success(request):
@@ -401,3 +438,19 @@ def payment_cancel(request):
 @csrf_exempt
 def payment_ipn(request):
     return HttpResponse("IPN received.")
+
+
+@login_required
+def my_orders(request):
+    # Get orders for the logged-in user
+    orders = Order.objects.filter(buyer=request.user)  # Assuming user is a ForeignKey in Order model
+    
+    context = {
+        'orders': orders
+    }
+
+    return render(request, 'my_orders.html', context)
+
+def order_details(request, order_id):
+    # Your logic to fetch the order and render the template
+    return render(request, 'order_details.html', {'order': ...})

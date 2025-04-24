@@ -1,0 +1,54 @@
+{% load static %}
+{% include "header.html" %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Orders - TrashToTreasure</title>
+    <link rel="stylesheet" href="{% static 'css/buyer_profile.css' %}">
+</head>
+
+<body>
+    <section class="my-orders-banner">
+        <h2>My Orders</h2>
+        <p><a href="/">Home</a> > My Orders</p>
+    </section>
+
+    <div class="my-orders-container">
+        <div class="order-grid">
+            {% for order in orders %}
+                <div class="order-card">
+                    <h3>Order ID: {{ order.id }}</h3>
+                    <p><strong>Order Date:</strong> {{ order.created_at }}</p>
+                    <p><strong>Payment Method:</strong> {{ order.payment_method }}</p>
+                    <p><strong>Delivery Status:</strong> {{ order.status }}</p>
+
+                    <div class="order-items">
+                        {% for item in order.items.all %}
+                            <div class="order-item">
+                                <p><strong>{{ item.product_name }}</strong></p>
+                                <p>Quantity: {{ item.quantity }}</p>
+                                <p>Total: BDT. {{ item.total }}</p>
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="order-total">
+                        <p><strong>Total Amount: </strong>BDT. {{ order.total_amount }}</p>
+                    </div>
+
+                    <a href="{% url 'order_details' order.id %}" class="view-details-btn">View Details</a>
+                </div>
+            {% empty %}
+                <p>You have no orders yet.</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    {% include "footer.html" %}
+</body>
+
+</html>

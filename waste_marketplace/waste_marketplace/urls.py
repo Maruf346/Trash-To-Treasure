@@ -60,6 +60,8 @@ urlpatterns = [
     path('payment/fail/', views.payment_fail, name='payment_fail'),
     path('payment/cancel/', views.payment_cancel, name='payment_cancel'),
     path('payment/ipn/', views.payment_ipn, name='payment_ipn'),
+    path('my-orders/', views.my_orders, name='my_orders'),
+    path('order/<int:order_id>/', views.order_details, name='order_details'),
 
 ]
 
