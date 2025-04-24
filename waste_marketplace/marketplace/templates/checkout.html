@@ -22,7 +22,7 @@
             <!-- Billing Details -->
             <div class="billing-details">
                 <h3>Billing details</h3>
-                <form action="{% url 'place_order' %}" method="POST" class="billing-form">
+                <form id="checkout-form" action="{% url 'place_order' %}" method="POST" class="billing-form">
                     {% csrf_token %}
                     <div class="form-group">
                         <label for="first-name">First Name</label>
@@ -111,6 +111,18 @@
                         <button type="submit" class="place-order-btn">Place Order</button>
                     </div>                      
                 </form>
+
+                <script>
+                    const form = document.getElementById('checkout-form');
+                    form.addEventListener('submit', function (e) {
+                      const paymentMethod = document.querySelector('input[name="payment_method"]:checked').value;
+                      if (paymentMethod === 'ssl') {
+                        form.action = '/initiate-payment/';
+                      } else {
+                        form.action = '{% url "place_order" %}';
+                      }
+                    });
+                  </script>
             </div>
         </div>
 </body>

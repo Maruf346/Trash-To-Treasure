@@ -55,6 +55,11 @@ urlpatterns = [
     path('trash/<slug:slug>/', views.trash_item_details, name='trash_item_details'),
     path('checkout/place_order/', views.place_order, name='place_order'),
     path('order-success/', views.order_success, name='order_success'),
+    path('initiate-payment/', views.initiate_payment, name='initiate_payment'),
+    path('payment/success/', views.payment_success, name='payment_success'),
+    path('payment/fail/', views.payment_fail, name='payment_fail'),
+    path('payment/cancel/', views.payment_cancel, name='payment_cancel'),
+    path('payment/ipn/', views.payment_ipn, name='payment_ipn'),
 
 ]
 

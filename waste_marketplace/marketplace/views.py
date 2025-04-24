@@ -12,6 +12,9 @@ from .forms import UpcycledProductForm
 from django.contrib.contenttypes.models import ContentType
 from .models import CartItem
 from django.views.decorators.csrf import csrf_exempt
+from sslcommerz_lib import SSLCOMMERZ 
+from django.http import HttpResponse
+from django.contrib.contenttypes.models import ContentType
 
 def login_view(request):
     if request.method == 'POST':
@@ -305,3 +308,57 @@ def place_order(request):
 
 def order_success(request):
     return render(request, 'order_success.html')
+
+
+@csrf_exempt
+def initiate_payment(request):
+    if request.method == 'POST':
+        # collect data from checkout form
+        post_data = request.POST
+
+        store_id = 'trash680a853212384'
+        store_passwd = 'trash680a853212384@ssl'
+
+        mypayment = SSLCOMMERZ({'store_id': store_id, 'store_pass': store_passwd, 'issandbox': True})
+
+        cart_items = CartItem.objects.filter(buyer=request.user)
+        subtotal = sum(item.quantity * item.item.price for item in cart_items)
+        
+        data = {
+            'total_amount': subtotal,  # Replace with dynamic subtotal from your cart
+            'currency': "BDT",
+            'tran_id': "TTS_" + str(request.user.id) + "_001",  # Generate dynamically
+            'success_url': "http://127.0.0.1:8000/payment/success/",
+            'fail_url': "http://127.0.0.1:8000/payment/fail/",
+            'cancel_url': "http://127.0.0.1:8000/payment/cancel/",
+            'ipn_url': "http://127.0.0.1:8000/payment/ipn/",
+            'cus_name': post_data.get("first_name") + " " + post_data.get("last_name"),
+            'cus_email': post_data.get("email"),
+            'cus_phone': post_data.get("phone"),
+            'cus_add1': post_data.get("street_address"),
+            'cus_city': post_data.get("city"),
+            'cus_country': post_data.get("country"),
+            'shipping_method': "NO",
+            'product_name': "TrashToTreasure Cart Checkout",
+            'product_category': "Mixed",
+            'product_profile': "general",
+        }
+
+        response = mypayment.createSession(data)
+
+        # Redirect user to SSLCOMMERZ payment page
+        return redirect(response['GatewayPageURL'])
+    
+    
+def payment_success(request):
+    return HttpResponse("Payment successful!")
+
+def payment_fail(request):
+    return HttpResponse("Payment failed.")
+
+def payment_cancel(request):
+    return HttpResponse("Payment canceled.")
+
+@csrf_exempt
+def payment_ipn(request):
+    return HttpResponse("IPN received.")
