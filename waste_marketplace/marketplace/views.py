@@ -11,7 +11,7 @@ from django.core.paginator import Paginator
 from .forms import UpcycledProductForm 
 from django.contrib.contenttypes.models import ContentType
 from .models import CartItem
-
+from django.views.decorators.csrf import csrf_exempt
 
 def login_view(request):
     if request.method == 'POST':
@@ -128,9 +128,19 @@ def product_listing(request):
 
     return render(request, 'product_listing.html', {'form': form})
 
+@login_required
 def checkout(request):
-    return render(request, 'checkout.html')
+    # 1) grab all cart items for the current user
+    cart_items = CartItem.objects.filter(buyer=request.user)
 
+    # 2) compute the overall subtotal
+    subtotal = sum(item.subtotal() for item in cart_items)
+
+    # 3) render with both in the context
+    return render(request, 'checkout.html', {
+        'cart_items': cart_items,
+        'subtotal': subtotal,
+    })
 
 #profile_views
 
@@ -272,3 +282,26 @@ def trash_item_list(request):
 def trash_item_details(request, slug):
     product = get_object_or_404(TrashItem, slug=slug)
     return render(request, 'trash_item_details.html', {'product': product})
+
+
+def checkout_view(request):
+    cart_items = CartItem.objects.filter(buyer=request.user)
+    subtotal = sum([item.subtotal() for item in cart_items])
+    return render(request, 'checkout.html', {
+        'cart_items': cart_items,
+        'subtotal': subtotal,
+    })
+
+
+
+@csrf_exempt  # optional, depends on SSLCommerz requirements
+def place_order(request):
+    if request.method == "POST":
+        # You will handle order placement logic here
+        return redirect('order_success')  # temporary redirection
+    else:
+        return redirect('checkout')
+
+
+def order_success(request):
+    return render(request, 'order_success.html')

@@ -112,3 +112,39 @@ class CartItem(models.Model):
 
     def subtotal(self):
         return self.quantity * self.item.price  # works as long as both models have a .price
+    
+    
+    
+class Order(models.Model):
+    PAYMENT_CHOICES = [
+        ('sslcommerz', 'SSLCommerz'),
+        ('cod', 'Cash on Delivery'),
+    ]
+
+    buyer = models.ForeignKey(User, on_delete=models.CASCADE)
+    first_name = models.CharField(max_length=50, blank=True, null=True)
+    last_name = models.CharField(max_length=50, blank=True, null=True)
+    company = models.CharField(max_length=100, blank=True, null=True)
+    country = models.CharField(max_length=50, blank=True, null=True)
+    street_address = models.CharField(max_length=255, blank=True, null=True)
+    city = models.CharField(max_length=50, blank=True, null=True)
+    state = models.CharField(max_length=50, blank=True, null=True)
+    zip_code = models.CharField(max_length=10, blank=True, null=True)
+    phone = models.CharField(max_length=20, blank=True, null=True)
+    email = models.EmailField(blank=True, null=True)
+    payment_method = models.CharField(max_length=20, choices=PAYMENT_CHOICES)
+    total_amount = models.DecimalField(max_digits=10, decimal_places=2)
+    created_at = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=20, default='Pending')  # e.g., Pending, Shipped, Delivered
+
+    def __str__(self):
+        return f"Order #{self.id} by {self.buyer.username}"
+    
+    
+class OrderItem(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+    item = GenericForeignKey('content_type', 'object_id')
+    quantity = models.PositiveIntegerField()
+    price = models.DecimalField(max_digits=10, decimal_places=2)

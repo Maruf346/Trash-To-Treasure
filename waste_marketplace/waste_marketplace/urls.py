@@ -53,6 +53,8 @@ urlpatterns = [
     path('cart/remove/<int:item_id>/', views.remove_from_cart, name='remove_from_cart'),
     path('trash-items/', views.trash_item_list, name='trash_item_list'),
     path('trash/<slug:slug>/', views.trash_item_details, name='trash_item_details'),
+    path('checkout/place_order/', views.place_order, name='place_order'),
+    path('order-success/', views.order_success, name='order_success'),
 
 ]
 
