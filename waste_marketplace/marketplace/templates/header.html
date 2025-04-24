@@ -105,6 +105,13 @@
         {% if request.user.is_authenticated and request.user.role == 'artisan' %}
             <a href="{% url 'listed_products'  %}">My Listings</a>
         {% endif %}
+
+        {% if request.user.is_authenticated %}
+            {% if request.user.role == 'artisan' or request.user.role == 'buyer' %}
+                <a href="{% url 'my_orders'  %}">My Orders</a>
+            {% endif %}
+        {% endif %}
+        
         <a href="/about/">About</a>
         <a href="/contact/">Contact</a>
     </div>
