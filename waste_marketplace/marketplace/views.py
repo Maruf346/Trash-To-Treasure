@@ -343,9 +343,6 @@ def place_order(request):
     return redirect('checkout')
 
 
-def order_success(request):
-    return render(request, 'order_success.html')
-
 
 @csrf_exempt
 def initiate_payment(request):
@@ -439,6 +436,9 @@ def payment_cancel(request):
 def payment_ipn(request):
     return HttpResponse("IPN received.")
 
+@csrf_exempt
+def order_success(request):
+    return redirect_with_message("Order placed successfully!")
 
 @login_required
 def my_orders(request):
