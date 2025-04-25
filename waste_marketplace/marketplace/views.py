@@ -503,8 +503,15 @@ def my_orders(request):
     return render(request, 'my_orders.html', context)
 
 def order_details(request, order_id):
-    # Your logic to fetch the order and render the template
-    return render(request, 'order_details.html', {'order': ...})
+    order = get_object_or_404(Order, id=order_id)
+
+    # You can fetch related items like this if using ForeignKey or related_name
+    ordered_items = order.items.all()  # Adjust if using another relation
+
+    return render(request, 'order_details.html', {
+        'order': order,
+        'ordered_items': ordered_items,
+    })
 
 def cancel_order(request, order_id):
     order = get_object_or_404(Order, id=order_id)
