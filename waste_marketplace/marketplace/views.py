@@ -346,43 +346,81 @@ def place_order(request):
 
 @csrf_exempt
 def initiate_payment(request):
-    if request.method == 'POST':
-        # collect data from checkout form
-        post_data = request.POST
+    if request.method != 'POST':
+        return redirect('checkout')
 
-        store_id = 'trash680a853212384'
-        store_passwd = 'trash680a853212384@ssl'
+    post_data = request.POST
+    user = request.user
 
-        mypayment = SSLCOMMERZ({'store_id': store_id, 'store_pass': store_passwd, 'issandbox': True})
+    # 1) Gather cart
+    cart_items = CartItem.objects.filter(buyer=user)
+    if not cart_items.exists():
+        return redirect_with_message("Your cart is empty.")
 
-        cart_items = CartItem.objects.filter(buyer=request.user)
-        subtotal = sum(item.quantity * item.item.price for item in cart_items)
-        
-        data = {
-            'total_amount': subtotal,  # Replace with dynamic subtotal from your cart
-            'currency': "BDT",
-            'tran_id': "TTS_" + str(request.user.id) + "_001",  # Generate dynamically
-            'success_url': "http://127.0.0.1:8000/payment/success/",
-            'fail_url': "http://127.0.0.1:8000/payment/fail/",
-            'cancel_url': "http://127.0.0.1:8000/payment/cancel/",
-            'ipn_url': "http://127.0.0.1:8000/payment/ipn/",
-            'cus_name': post_data.get("first_name") + " " + post_data.get("last_name"),
-            'cus_email': post_data.get("email"),
-            'cus_phone': post_data.get("phone"),
-            'cus_add1': post_data.get("street_address"),
-            'cus_city': post_data.get("city"),
-            'cus_country': post_data.get("country"),
-            'shipping_method': "NO",
-            'product_name': "TrashToTreasure Cart Checkout",
-            'product_category': "Mixed",
-            'product_profile': "general",
-        }
+    subtotal = sum(item.subtotal() for item in cart_items)
 
-        response = mypayment.createSession(data)
+    # 2) Pre-create Order (Pending)
+    order = Order.objects.create(
+        buyer=user,
+        first_name=post_data.get("first_name"),
+        last_name=post_data.get("last_name"),
+        company=post_data.get("company"),
+        country=post_data.get("country"),
+        street_address=post_data.get("street_address"),
+        city=post_data.get("city"),
+        state=post_data.get("state"),
+        zip_code=post_data.get("zip"),
+        phone=post_data.get("phone"),
+        email=post_data.get("email"),
+        payment_method='sslcommerz',
+        total_amount=Decimal(subtotal),
+        status='Pending'
+    )
 
-        # Redirect user to SSLCOMMERZ payment page
-        return redirect(response['GatewayPageURL'])
-    
+    # 3) Create its OrderItems
+    for item in cart_items:
+        OrderItem.objects.create(
+            order=order,
+            content_type=item.content_type,
+            object_id=item.object_id,
+            quantity=item.quantity,
+            price=item.item.price
+        )
+
+    # 4) Save pending order ID in session
+    request.session['pending_order_id'] = order.id
+
+    # 5) Build SSLCommerz payload using order.id as tran_id
+    store_id = 'trash680a853212384'
+    store_passwd = 'trash680a853212384@ssl'
+    gateway = SSLCOMMERZ({
+        'store_id': store_id,
+        'store_pass': store_passwd,
+        'issandbox': True
+    })
+
+    data = {
+        'total_amount': subtotal,
+        'currency': "BDT",
+        'tran_id': f"TTS_{order.id}",
+        'success_url': request.build_absolute_uri('/payment/success/'),
+        'fail_url':    request.build_absolute_uri('/payment/fail/'),
+        'cancel_url':  request.build_absolute_uri('/payment/cancel/'),
+        'ipn_url':     request.build_absolute_uri('/payment/ipn/'),
+        'cus_name':    f"{order.first_name} {order.last_name}",
+        'cus_email':   order.email,
+        'cus_phone':   order.phone,
+        'cus_add1':    order.street_address,
+        'cus_city':    order.city,
+        'cus_country': order.country,
+        'shipping_method': "NO",
+        'product_name': "TrashToTreasure Order",
+        'product_category': "General",
+        'product_profile': "general",
+    }
+
+    response = gateway.createSession(data)
+    return redirect(response['GatewayPageURL'])   
 
 def redirect_with_message(message):
     return HttpResponse(f"""
@@ -422,7 +460,19 @@ def redirect_with_message(message):
 
 @csrf_exempt
 def payment_success(request):
-    return redirect_with_message("✅ Payment successful!")
+    tran_id = request.POST.get('tran_id') or request.GET.get('tran_id')
+    if not tran_id or not tran_id.startswith("TTS_"):
+        return redirect_with_message("❌ Invalid transaction ID.")
+    
+    order_id = tran_id.replace("TTS_", "")
+    order = get_object_or_404(Order, id=order_id)
+
+    # Same steps as before
+    order.status = 'Paid'
+    order.save()
+    CartItem.objects.filter(buyer=order.buyer).delete()
+    
+    return redirect_with_message("✅ Payment successful and order placed!")
 
 @csrf_exempt
 def payment_fail(request):
