@@ -505,3 +505,17 @@ def my_orders(request):
 def order_details(request, order_id):
     # Your logic to fetch the order and render the template
     return render(request, 'order_details.html', {'order': ...})
+
+def cancel_order(request, order_id):
+    order = get_object_or_404(Order, id=order_id)
+
+    if order.delivery_status in ['ready', 'packed']:
+        order.delivery_status = 'cancelled'
+        order.save()
+        messages.success(request, f"Order #{order.id} has been cancelled successfully.")
+    elif order.delivery_status == 'on the way':
+        messages.warning(request, f"Order #{order.id} is on the way and cannot be cancelled.")
+    else:
+        messages.error(request, f"Order #{order.id} cannot be cancelled at this stage.")
+
+    return redirect('my_orders')  # Adjust this to your actual orders list view name

@@ -112,6 +112,32 @@
         .view-details-btn:hover {
             background-color: #218838;
         }
+
+        .cancel-order-btn {
+            padding: 10px 16px;
+            background-color: #dc3545;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+        }
+        
+        .cancel-order-btn:hover {
+            background-color: #c82333;
+        }
+        
+        .cancel-disabled-btn {
+            padding: 10px 16px;
+            background-color: #6c757d;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            cursor: not-allowed;
+            font-weight: 500;
+        }
+        
         </style>
         
 </head>
@@ -152,7 +178,19 @@
                         <p><strong>Total Amount: </strong>BDT. {{ order.total_amount }}</p>
                     </div>
     
-                    <a href="{% url 'order_details' order.id %}" class="view-details-btn">View Details</a>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
+                        <a href="{% url 'order_details' order.id %}" class="view-details-btn">View Details</a>
+                    
+                        {% if order.delivery_status == 'ready' or order.delivery_status == 'packed' %}
+                            <form method="POST" action="{% url 'cancel_order' order.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="cancel-order-btn">Cancel Order</button>
+                            </form>
+                        {% elif order.delivery_status == 'on the way' %}
+                            <button class="cancel-disabled-btn" onclick="alert('Order is on the way. You cannot cancel it now.')">Cancel Order</button>
+                        {% endif %}
+                    </div>
+                    
                 </div>
             {% empty %}
                 <p>You have no orders yet.</p>
