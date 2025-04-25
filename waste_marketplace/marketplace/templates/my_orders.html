@@ -130,7 +130,8 @@
                     <p><strong>Order Date:</strong> {{ order.created_at }}</p>
                     <p><strong>Payment Method:</strong> {{ order.payment_method }}</p>
                     <p><strong>Delivery Status:</strong> {{ order.delivery_status }}</p>
-    
+                    <p><strong>Payment Status:</strong> {{ order.payment_status }}</p>
+
                     <div class="order-items">
                         {% for item in order.items.all %}
                             <div class="order-item">

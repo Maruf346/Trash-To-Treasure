@@ -374,7 +374,8 @@ def initiate_payment(request):
         email=post_data.get("email"),
         payment_method='sslcommerz',
         total_amount=Decimal(subtotal),
-        status='Pending'
+        payment_status='Pending',
+        delivery_status='Ready',
     )
 
     # 3) Create its OrderItems
