@@ -507,7 +507,9 @@ def order_details(request, order_id):
 
     # You can fetch related items like this if using ForeignKey or related_name
     ordered_items = order.items.all()  # Adjust if using another relation
-
+    for item in ordered_items:
+        item.subtotal = item.quantity * item.price
+        
     return render(request, 'order_details.html', {
         'order': order,
         'ordered_items': ordered_items,

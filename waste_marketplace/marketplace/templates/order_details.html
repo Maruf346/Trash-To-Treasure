@@ -84,6 +84,17 @@
         .back-link:hover {
             text-decoration: underline;
         }
+
+        .item-info h4 a {
+            text-decoration: none;
+            color: inherit; /* Keeps the default text color */
+            transition: all 0.3s ease;
+        }
+        
+        .item-info h4 a:hover {
+            text-decoration: underline;
+        }
+        
     </style>
 </head>
 <body>
@@ -92,30 +103,51 @@
     <div class="order-header">Order #{{ order.id }}</div>
 
     <div class="order-meta"><span class="product-label">Order Date:</span> {{ order.created_at }}</div>
-    <div class="order-meta"><span class="product-label">Status:</span> {{ order.status }}</div>
-    <div class="order-meta"><span class="product-label">Buyer:</span> {{ order.buyer.get_full_name }}</div>
-    <div class="order-meta"><span class="product-label">Shipping Address:</span> {{ order.shipping_address }}</div>
+    <div class="order-meta"><span class="product-label">Status:</span> {{ order.delivery_status }}</div>
+    <div class="order-meta"><span class="product-label">Buyer:</span> {{ order.buyer.name }}</div>
+    <div class="order-meta">
+        <span class="product-label">Shipping Address:</span> 
+        {{ order.street_address }}, {{ order.city }}, {{ order.state }}, {{ order.zip_code }}, {{ order.country }}
+    </div>
 
     <div class="order-items">
         <h3>Items Ordered</h3>
         {% for item in ordered_items %}
             <div class="order-item">
-                <img src="{{ item.product.product_images.url }}" alt="{{ item.product.product_name }}" class="item-image">
+                {% if item.content_type.model == 'upcycledproduct' %}
+                    <img src="{{ item.item.product_images.url }}" alt="{{ item.item.product_name }}" class="item-image">
+                {% elif item.content_type.model == 'trashitem' %}
+                    <img src="{{ item.item.images.url }}" alt="{{ item.item.material_name }}" class="item-image">
+                {% endif %}
+
                 <div class="item-info">
-                    <h4>{{ item.product.product_name }}</h4>
-                    <p><span class="product-label">Price:</span> BDT {{ item.product.price }}</p>
+                    {% if item.content_type.model == 'upcycledproduct' %}
+                        <h4>
+                            <a href="{% url 'upcycled_product_details' slug=item.item.slug %}">
+                                {{ item.item.product_name }}
+                            </a>
+                        </h4>
+                    {% elif item.content_type.model == 'trashitem' %}
+                        <h4>
+                            <a href="{% url 'trash_item_details' slug=item.item.slug %}">
+                                {{ item.item.material_name }}
+                            </a>
+                        </h4>
+                    {% endif %}
+
+                    <p><span class="product-label">Price:</span> BDT {{ item.price }}</p>
                     <p><span class="product-label">Quantity:</span> {{ item.quantity }}</p>
-                    <p><span class="product-label">Subtotal:</span> BDT {{ item.quantity|floatformat:2|add:""|floatformat:2|floatformat:""|floatformat:2 }} × {{ item.product.price }} = BDT {{ item.quantity|multiply:item.product.price }}</p>
+                    <p><span class="product-label">Subtotal:</span> BDT {{ item.quantity|floatformat:2 }} × {{ item.price }} = BDT {{ item.subtotal|floatformat:2 }}</p>
                 </div>
             </div>
         {% endfor %}
     </div>
 
     <div class="order-summary">
-        <p><strong>Total Amount:</strong> BDT {{ order.total_price }}</p>
+        <p><strong>Total Amount:</strong> BDT {{ order.total_amount }}</p>
     </div>
 
-    <a href="{% url 'buyer_profile' %}" class="back-link">← Back to Profile</a>
+    <a href="{% url 'my_orders' %}" class="back-link">← Back to My-Orders</a>
 </div>
 
 </body>
