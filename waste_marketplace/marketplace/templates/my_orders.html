@@ -129,7 +129,7 @@
                     <h3>Order ID: {{ order.id }}</h3>
                     <p><strong>Order Date:</strong> {{ order.created_at }}</p>
                     <p><strong>Payment Method:</strong> {{ order.payment_method }}</p>
-                    <p><strong>Delivery Status:</strong> {{ order.status }}</p>
+                    <p><strong>Delivery Status:</strong> {{ order.delivery_status }}</p>
     
                     <div class="order-items">
                         {% for item in order.items.all %}

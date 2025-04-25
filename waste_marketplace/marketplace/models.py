@@ -120,6 +120,19 @@ class Order(models.Model):
         ('sslcommerz', 'SSLCommerz'),
         ('cod', 'Cash on Delivery'),
     ]
+    
+    PAYMENT_STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('paid', 'Paid'),
+        ('failed', 'Failed'),
+    ]
+    
+    DELIVERY_STATUS_CHOICES = [
+        ('ready', 'Ready to Ship'),
+        ('packed', 'Packed'),
+        ('on_the_way', 'On the Way'),
+        ('delivered', 'Delivered'),
+    ]
 
     buyer = models.ForeignKey(User, on_delete=models.CASCADE)
     first_name = models.CharField(max_length=50, blank=True, null=True)
@@ -133,9 +146,10 @@ class Order(models.Model):
     phone = models.CharField(max_length=20, blank=True, null=True)
     email = models.EmailField(blank=True, null=True)
     payment_method = models.CharField(max_length=20, choices=PAYMENT_CHOICES)
+    payment_status = models.CharField(max_length=20, choices=PAYMENT_STATUS_CHOICES, default='pending')  
+    delivery_status = models.CharField(max_length=20, choices=DELIVERY_STATUS_CHOICES, default='ready')  
     total_amount = models.DecimalField(max_digits=10, decimal_places=2)
     created_at = models.DateTimeField(auto_now_add=True)
-    status = models.CharField(max_length=20, default='Pending')  # e.g., Pending, Shipped, Delivered
 
     def __str__(self):
         return f"Order #{self.id} by {self.buyer.username}"

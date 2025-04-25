@@ -468,7 +468,7 @@ def payment_success(request):
     order = get_object_or_404(Order, id=order_id)
 
     # Same steps as before
-    order.status = 'Paid'
+    order.payment_status = 'Paid'
     order.save()
     CartItem.objects.filter(buyer=order.buyer).delete()
     
