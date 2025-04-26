@@ -133,6 +133,7 @@ class Order(models.Model):
         ('on_the_way', 'On the Way'),
         ('delivered', 'Delivered'),
         ('cancelled', 'Cancelled'),
+        ('returned', 'Returned'),
     ]
 
     buyer = models.ForeignKey(User, on_delete=models.CASCADE)

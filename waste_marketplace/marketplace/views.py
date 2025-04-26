@@ -61,7 +61,32 @@ def driver_dashboard(request):
     if request.user.role != 'driver':
         return HttpResponseForbidden("You are not authorized to view this page.")
 
-    return render(request, 'driver_dashboard.html')
+    # Fetch all orders assigned to this driver
+    orders = Order.objects.filter(assigned_delivery_guy=request.user)
+
+    return render(request, 'driver_dashboard.html', {
+        'orders': orders
+    })
+
+@login_required
+def update_delivery_status(request, order_id):
+    if request.user.role != 'driver':
+        return HttpResponseForbidden()
+
+    order = get_object_or_404(
+        Order,
+        id=order_id,
+        assigned_delivery_guy=request.user
+    )
+
+    if request.method == 'POST':
+        new_status = request.POST.get('delivery_status')
+        allowed = ['packed','on_the_way','delivered','returned']
+        if new_status in allowed:
+            order.delivery_status = new_status
+            order.save()
+    return redirect('driver_dashboard')
+
 
 @login_required
 def contact(request):
