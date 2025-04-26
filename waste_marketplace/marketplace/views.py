@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from .models import UpcycledProduct, TrashItem
-from datetime import date
+from datetime import datetime
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
@@ -16,6 +16,8 @@ from sslcommerz_lib import SSLCOMMERZ
 from django.http import HttpResponse
 from django.contrib.contenttypes.models import ContentType
 from decimal import Decimal
+import datetime
+
 
 def login_view(request):
     if request.method == 'POST':
@@ -84,6 +86,25 @@ def update_delivery_status(request, order_id):
         allowed = ['packed','on_the_way','delivered','returned']
         if new_status in allowed:
             order.delivery_status = new_status
+            order.save()
+    return redirect('driver_dashboard')
+
+@login_required
+def update_expected_delivery(request, order_id):
+    if request.user.role != 'driver':
+        return HttpResponseForbidden()
+
+    order = get_object_or_404(
+        Order, 
+        id=order_id, 
+        assigned_delivery_guy=request.user
+    )
+
+    if request.method == 'POST':
+        date_str = request.POST.get('expected_delivery')
+        if date_str:
+            # parse YYYY-MM-DD from the date input
+            order.expected_delivery = datetime.datetime.strptime(date_str, '%Y-%m-%d')
             order.save()
     return redirect('driver_dashboard')
 

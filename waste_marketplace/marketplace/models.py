@@ -159,6 +159,7 @@ class Order(models.Model):
         blank=True,
         related_name='assigned_orders'
     )
+    expected_delivery = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return f"Order #{self.id} by {self.buyer.username}"

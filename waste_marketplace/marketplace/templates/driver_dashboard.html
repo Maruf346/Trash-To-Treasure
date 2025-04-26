@@ -37,8 +37,8 @@
                     <th>Date</th>
                     <th>Delivery Status</th>
                     <th>Buyer Name</th>
-                    <th>Phone</th>
-                    <th>Email</th>
+                    <th>Contact</th>
+                    <th>Expected Delivery</th>
                 </tr>
             </thead>
             <tbody>
@@ -67,7 +67,10 @@
                       <td>
                         {% for item in order.items.all %}
                           {% if item.content_type.model == 'trashitem' %}
-                            {{ item.item.trash_point }}
+                            {{ item.item.location }}
+                          {% endif %}
+                          {% if item.content_type.model == 'upcycledproduct' %}
+                            {{ item.item.location }}
                           {% endif %}
                         {% endfor %}
                       </td>
@@ -101,8 +104,19 @@
               
                       <!-- Buyer Info -->
                       <td>{{ order.first_name }} {{ order.last_name }}</td>
-                      <td>{{ order.phone }}</td>
-                      <td>{{ order.email }}</td>
+                      <td>{{ order.phone }} , {{ order.email }}</td>
+                      <td>
+                        <form method="POST" action="{% url 'update_expected_delivery' order.id %}">
+                          {% csrf_token %}
+                          <input
+                            type="date"
+                            name="expected_delivery"
+                            value="{{ order.expected_delivery|date:'Y-m-d' }}"
+                            onchange="this.form.submit()"
+                          >
+                        </form>
+                      </td>
+                      
                     </tr>
                   {% endfor %}
                 {% else %}

@@ -64,6 +64,7 @@ urlpatterns = [
     path('order/<int:order_id>/', views.order_details, name='order_details'),
     path('cancel-order/<int:order_id>/', views.cancel_order, name='cancel_order'),
     path('driver/update-status/<int:order_id>/',views.update_delivery_status,name='update_delivery_status'),
+    path('driver/update-expected/<int:order_id>/',views.update_expected_delivery,name='update_expected_delivery'),
 
 ]
 

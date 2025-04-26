@@ -114,13 +114,11 @@
         {{ order.assigned_delivery_guy.name }}
     </div>
     <div class="order-meta">
-        <span class="product-label">Assigned Delivery Guy Phone:</span> 
-        {{ order.assigned_delivery_guy.phone }}
+        <span class="product-label">Assigned Delivery Guy Contact:</span> 
+        {{ order.assigned_delivery_guy.phone }}, {{ order.assigned_delivery_guy.email }} 
     </div>
-    <div class="order-meta">
-        <span class="product-label">Assigned Delivery Guy Email:</span> 
-        {{ order.assigned_delivery_guy.email }}
-    </div>
+    <div class="order-meta"><span class="product-label">Expected Delivery:</span>
+         {{ order.expected_delivery }}</div>
     
 
     <div class="order-items">

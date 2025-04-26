@@ -140,3 +140,14 @@ tbody tr:hover {
 .show-more button:hover {
     background: #d9c2a7;
 }
+
+input[type="date"] {
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+  }
+  input[type="date"]:focus {
+    outline: none;
+    border-color: #8a6f28;
+  }
