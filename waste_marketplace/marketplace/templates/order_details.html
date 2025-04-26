@@ -109,6 +109,19 @@
         <span class="product-label">Shipping Address:</span> 
         {{ order.street_address }}, {{ order.city }}, {{ order.state }}, {{ order.zip_code }}, {{ order.country }}
     </div>
+    <div class="order-meta">
+        <span class="product-label">Assigned Delivery Guy:</span> 
+        {{ order.assigned_delivery_guy.name }}
+    </div>
+    <div class="order-meta">
+        <span class="product-label">Assigned Delivery Guy Phone:</span> 
+        {{ order.assigned_delivery_guy.phone }}
+    </div>
+    <div class="order-meta">
+        <span class="product-label">Assigned Delivery Guy Email:</span> 
+        {{ order.assigned_delivery_guy.email }}
+    </div>
+    
 
     <div class="order-items">
         <h3>Items Ordered</h3>
