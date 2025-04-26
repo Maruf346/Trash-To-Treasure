@@ -181,14 +181,15 @@
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
                         <a href="{% url 'order_details' order.id %}" class="view-details-btn">View Details</a>
                     
-                        {% if order.delivery_status == 'ready' or order.delivery_status == 'packed' %}
+                        {% if order.delivery_status|lower == 'ready' or order.delivery_status|lower == 'packed' %}
                             <form method="POST" action="{% url 'cancel_order' order.id %}">
                                 {% csrf_token %}
                                 <button type="submit" class="cancel-order-btn">Cancel Order</button>
                             </form>
-                        {% elif order.delivery_status == 'on the way' %}
+                        {% elif order.delivery_status|lower == 'on_the_way' %}
                             <button class="cancel-disabled-btn" onclick="alert('Order is on the way. You cannot cancel it now.')">Cancel Order</button>
                         {% endif %}
+
                     </div>
                     
                 </div>
