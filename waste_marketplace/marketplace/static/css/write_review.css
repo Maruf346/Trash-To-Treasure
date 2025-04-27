@@ -29,6 +29,20 @@
     color: gold;
   }
 
+  .star i {
+    font-size: 24px;
+    color: lightgray;
+    transition: color 0.2s;
+  }
+
+  .star.selected i {
+    color: gold;
+  }
+
+  .star.hovered i {
+    color: gold;
+  }
+
   
   textarea {
     width: 100%;
@@ -61,4 +75,18 @@
 
   .review-block a:hover {
       text-decoration: underline;
+  }
+
+  .item-image, .driver-image {
+    margin-top: 8px;
+    margin-bottom: 12px;
+    text-align: left;
+  }
+
+  .item-image img, .driver-image img {
+    width: 110px;
+    height: auto;
+    object-fit: cover;
+    border-radius: 5px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
   }

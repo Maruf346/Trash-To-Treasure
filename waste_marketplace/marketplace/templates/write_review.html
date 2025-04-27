@@ -8,6 +8,8 @@
     <title>Write Review - TrashToTreasure</title>
     <link rel="stylesheet" href="{% static 'css/buyer_profile.css' %}">
     <link rel="stylesheet" href="{% static 'css/write_review.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
 </head>
 <body>
 
@@ -37,10 +39,26 @@
                     Unknown Item
                 {% endif %}
             </h3>
+
+            {% if product|model_name == 'upcycledproduct' %}
+                {% if product.product_images %}
+                    <div class="item-image">
+                        <img src="{{ product.product_images.url }}" alt="{{ product.product_name }}">
+                    </div>
+                {% endif %}
+            {% elif product|model_name == 'trashitem' %}
+                {% if product.images %}
+                    <div class="item-image">
+                        <img src="{{ product.images.url }}" alt="{{ product.material_name }}">
+                    </div>
+                {% endif %}
+            {% endif %}
+
+
             
         <div class="stars" data-index="{{ forloop.counter0 }}">
             {% for i in "12345" %}
-                <span class="star" data-value="{{ forloop.counter|add:"-1" }}">{{ forloop.counter|add:"-1" }}</span>
+                <span class="star" data-value="{{ forloop.counter }}"><i class="fa-regular fa-star"></i></span>
             {% endfor %}
             <input type="hidden" name="rating_{{ forloop.counter0 }}" id="rating_{{ forloop.counter0 }}">
         </div>
@@ -51,19 +69,20 @@
     {% endfor %}
 
     {% if driver_pending %}
-      <div class="review-block">
-        <h3>Delivery by {{ driver.name }}</h3>
-        <div class="stars">
-          <label><input type="radio" name="rating_driver" value="1">★</label>
-          <label><input type="radio" name="rating_driver" value="2">★</label>
-          <label><input type="radio" name="rating_driver" value="3">★</label>
-          <label><input type="radio" name="rating_driver" value="4">★</label>
-          <label><input type="radio" name="rating_driver" value="5">★</label>
+        <div class="review-block">
+            <h3>Delivery by {{ driver.name }}</h3>
+
+            <div class="stars" data-driver="true">
+                {% for i in "12345" %}
+                    <span class="star" data-value="{{ forloop.counter }}"><i class="fa-regular fa-star"></i></span>
+                {% endfor %}
+                <input type="hidden" name="rating_driver" id="rating_driver">
+            </div>
+            <textarea name="comment_driver"
+                    placeholder="Comment on delivery (optional)"></textarea>
         </div>
-        <textarea name="comment_driver"
-                  placeholder="Comment on delivery (optional)"></textarea>
-      </div>
     {% endif %}
+
 
     <button type="submit" class="submit-review-btn">Submit Reviews</button>
   </form>
@@ -73,31 +92,53 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const starBlocks = document.querySelectorAll('.stars');
-    
+        
         starBlocks.forEach(block => {
             const stars = block.querySelectorAll('.star');
             const hiddenInput = block.querySelector('input[type="hidden"]');
-    
+        
             stars.forEach((star, index) => {
                 star.addEventListener('mouseover', function() {
                     stars.forEach((s, i) => {
-                        s.classList.toggle('hovered', i <= index);
+                        if (i <= index) {
+                            s.querySelector('i').classList.add('fa-solid');
+                            s.querySelector('i').classList.remove('fa-regular');
+                        } else {
+                            s.querySelector('i').classList.add('fa-regular');
+                            s.querySelector('i').classList.remove('fa-solid');
+                        }
                     });
                 });
     
                 star.addEventListener('mouseout', function() {
-                    stars.forEach((s) => s.classList.remove('hovered'));
+                    stars.forEach((s, i) => {
+                        if (s.classList.contains('selected')) {
+                            s.querySelector('i').classList.add('fa-solid');
+                            s.querySelector('i').classList.remove('fa-regular');
+                        } else {
+                            s.querySelector('i').classList.add('fa-regular');
+                            s.querySelector('i').classList.remove('fa-solid');
+                        }
+                    });
                 });
-    
+        
                 star.addEventListener('click', function() {
                     hiddenInput.value = star.getAttribute('data-value');
                     stars.forEach((s, i) => {
-                        s.classList.toggle('selected', i <= index);
+                        if (i <= index) {
+                            s.classList.add('selected');
+                            s.querySelector('i').classList.add('fa-solid');
+                            s.querySelector('i').classList.remove('fa-regular');
+                        } else {
+                            s.classList.remove('selected');
+                            s.querySelector('i').classList.add('fa-regular');
+                            s.querySelector('i').classList.remove('fa-solid');
+                        }
                     });
                 });
             });
         });
-    });
+    });    
     </script>
     
 
