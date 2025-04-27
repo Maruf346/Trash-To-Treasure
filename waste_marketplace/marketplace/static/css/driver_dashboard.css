@@ -52,7 +52,9 @@ body {
 
 table {
     width: 100%;
-    border-collapse: collapse;
+
+    border-collapse: separate;    /* default—ensure border-spacing is honored */
+    border-spacing: 0 10px;
 }
 
 thead {

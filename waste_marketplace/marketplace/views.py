@@ -109,6 +109,19 @@ def update_expected_delivery(request, order_id):
     return redirect('driver_dashboard')
 
 
+def delivery_history(request):
+    driver = request.user  # assuming only logged-in drivers can access
+    orders = Order.objects.filter(assigned_delivery_guy=request.user)
+
+    active_deliveries = orders.exclude(delivery_status__in=['delivered', 'returned'])
+    completed_deliveries = orders.filter(delivery_status__in=['delivered', 'returned'])
+
+    context = {
+        'active_deliveries': active_deliveries,
+        'completed_deliveries': completed_deliveries,
+    }
+    return render(request, 'delivery_history.html', context)
+
 @login_required
 def contact(request):
     return render(request, 'contact.html')
