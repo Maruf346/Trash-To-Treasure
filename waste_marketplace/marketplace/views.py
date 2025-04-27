@@ -634,13 +634,15 @@ def write_review(request, order_id):
 
     # check if driver needs review
     driver_pending = False
-    driver = order.assigned_delivery_guy
-    if driver:
-        ct_drv = ContentType.objects.get_for_model(driver)
+    driver_profile = None
+    if order.assigned_delivery_guy:
+        # get the DriverProfile, not the User
+        driver_profile = order.assigned_delivery_guy.driverprofile
+        ct_drv = ContentType.objects.get_for_model(driver_profile)
         if not Review.objects.filter(
                 reviewer=request.user,
                 content_type=ct_drv,
-                object_id=driver.id
+                object_id=driver_profile.id
             ).exists():
             driver_pending = True
 
@@ -674,20 +676,20 @@ def write_review(request, order_id):
             dr_rating = int(request.POST.get("rating_driver", 0))
             dr_comment = request.POST.get("comment_driver", "").strip()
             if dr_rating:
-                ct = ContentType.objects.get_for_model(driver)
+                ct = ContentType.objects.get_for_model(driver_profile)
                 Review.objects.create(
                     reviewer=request.user,
                     rating=dr_rating,
                     comment=dr_comment,
                     content_type=ct,
-                    object_id=driver.id
+                    object_id=driver_profile.id
                 )
                 # update driver's avg
                 avg = Review.objects.filter(
-                    content_type=ct, object_id=driver.id
+                    content_type=ct, object_id=driver_profile.id
                 ).aggregate(Avg('rating'))['rating__avg'] or 0
-                driver.rating = avg
-                driver.save()
+                driver_profile.rating = avg
+                driver_profile.save()
 
         return redirect('order_details', order_id=order.id)
 
@@ -695,5 +697,5 @@ def write_review(request, order_id):
         'order': order,
         'reviewable_items': reviewable_items,
         'driver_pending': driver_pending,
-        'driver': driver,
+        'driver': driver_profile,
     })

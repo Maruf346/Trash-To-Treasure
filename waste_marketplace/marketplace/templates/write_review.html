@@ -70,7 +70,7 @@
 
     {% if driver_pending %}
         <div class="review-block">
-            <h3>Delivery by {{ driver.name }}</h3>
+            <h3>Delivery by {{ driver.user.name }}</h3>
 
             <div class="stars" data-driver="true">
                 {% for i in "12345" %}
