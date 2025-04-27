@@ -14,7 +14,7 @@
 <!-- Banner Section -->
 <section class="product-banner">
     <h2>Write Review</h2>
-    <p><a href="/driver_dashboard">Home</a> &gt; Write Review for Order #{{ order.id }}</p>
+    <p><a href="/ ">Home</a> &gt; Write Review for Order #{{ order.id }}</p>
 </section>
 
 <div class="review-container">
@@ -25,12 +25,19 @@
     {% for product in reviewable_items %}
         <div class="review-block">
             <h3>
-                {% if product.content_object|model_name == 'upcycledproduct' %}
-                    {{ product.content_object.product_name }}
+                {% if product|model_name == 'upcycledproduct' %}
+                    <a href="{% url 'upcycled_product_details' slug=product.slug %}">
+                        {{ product.product_name }}
+                    </a>
+                {% elif product|model_name == 'trashitem' %}
+                    <a href="{% url 'trash_item_details' slug=product.slug %}">
+                        {{ product.material_name }}
+                    </a>
                 {% else %}
-                    {{ product.content_object.material_name }}
+                    Unknown Item
                 {% endif %}
             </h3>
+            
         <div class="stars">
           <label><input type="radio" name="rating_{{ forloop.counter0 }}" value="1">★</label>
           <label><input type="radio" name="rating_{{ forloop.counter0 }}" value="2">★</label>
@@ -45,7 +52,7 @@
 
     {% if driver_pending %}
       <div class="review-block">
-        <h3>Delivery by {{ order.assigned_delivery_guy.get_full_name }}</h3>
+        <h3>Delivery by {{ driver.name }}</h3>
         <div class="stars">
           <label><input type="radio" name="rating_driver" value="1">★</label>
           <label><input type="radio" name="rating_driver" value="2">★</label>

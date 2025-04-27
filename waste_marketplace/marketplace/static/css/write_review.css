@@ -63,4 +63,12 @@
   .submit-review-btn:hover {
     background: #218838;
   }
-  
+
+  .review-block a {
+    text-decoration: none;
+    color: #42464b;
+  }
+
+  .review-block a:hover {
+      text-decoration: underline;
+  }

@@ -695,4 +695,5 @@ def write_review(request, order_id):
         'order': order,
         'reviewable_items': reviewable_items,
         'driver_pending': driver_pending,
+        'driver': driver,
     })
