@@ -111,6 +111,12 @@
                 <a href="{% url 'my_orders'  %}">My Orders</a>
             {% endif %}
         {% endif %}
+
+        {% if user.is_authenticated %}
+            {% if user.role == 'driver' %}
+                <a href="{% url 'driver_reviews' %}">Reviews</a>
+            {% endif %}
+        {% endif %}
         
         <a href="/about/">About</a>
         <a href="/contact/">Contact</a>

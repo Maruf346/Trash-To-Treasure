@@ -16,7 +16,6 @@
     <h2>Driver Reviews</h2>
     <p><a href="/driver_dashboard">Home</a> &gt; My Reviews</p>
   </section>
-
   <div class="reviews-container">
     {% if reviews %}
       {% for review in reviews %}
@@ -24,13 +23,14 @@
           <div class="review-header">
             <div class="reviewer-info">
               <div class="avatar">
-                {% if review.reviewer.profile_picture %}
-                  <img src="{{ review.reviewer.profile_picture.url }}" alt="Avatar">
-                {% else %}
-                  <span class="avatar-letter">{{ review.reviewer.name|slice:":1" }}</span>
-                {% endif %}
+                {# Avatar fallback to initial #}
+                <span class="avatar-letter">
+                  {{ review.rated_by.name|default:review.rated_by.username|slice:":1" }}
+                </span>
               </div>
-              <div class="reviewer-name">{{ review.reviewer.name|default:review.reviewer.username }}</div>
+              <div class="reviewer-name">
+                {{ review.rated_by.name|default:review.rated_by.username }}
+              </div>
             </div>
             <div class="review-rating">
               {% for i in "12345" %}
@@ -43,7 +43,7 @@
               <span class="rating-number">({{ review.rating }}/5)</span>
             </div>
           </div>
-
+  
           {% if review.comment %}
             <div class="review-comment">{{ review.comment }}</div>
           {% endif %}
@@ -54,7 +54,8 @@
       <p class="no-reviews">No reviews yet.</p>
     {% endif %}
   </div>
-
+  
+  
 {% include "footer.html" %}
 </body>
 </html>

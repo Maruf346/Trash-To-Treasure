@@ -712,21 +712,21 @@ def write_review(request, order_id):
     
 @login_required
 def driver_reviews(request):
-    # only drivers may view this page
     if request.user.role != 'driver':
         return HttpResponseForbidden("Access denied.")
 
-    # get this driver’s profile
+    # fetch the DriverProfile
     try:
         driver = request.user.driverprofile
     except DriverProfile.DoesNotExist:
         return HttpResponseForbidden("No driver profile found.")
 
-    # pull all Review objects that target this DriverProfile
-    ct = ContentType.objects.get_for_model(driver)
-    reviews = Review.objects.filter(content_type=ct, object_id=driver.id).order_by('-created_at')
+    # **use DriverRating**, not Review**
+    reviews = DriverRating.objects.filter(
+        driver=driver
+    ).order_by('-created_at')
 
     return render(request, 'driver_reviews.html', {
-        'driver': driver,
+        'driver':  driver,
         'reviews': reviews,
     })
