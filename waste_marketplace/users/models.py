@@ -58,13 +58,18 @@ class DriverProfile(models.Model):
 
 
 class DriverRating(models.Model):
-    driver = models.ForeignKey(DriverProfile, on_delete=models.CASCADE, related_name='ratings')
+    driver   = models.ForeignKey(DriverProfile, on_delete=models.CASCADE, related_name='ratings')
     rated_by = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    rating = models.PositiveIntegerField()  # e.g., 1 to 5
+    order    = models.ForeignKey('marketplace.Order', on_delete=models.CASCADE, null=True, blank=True)
+    rating   = models.PositiveSmallIntegerField()  # 1–5
+    comment  = models.TextField(blank=True, null=True)  # optional
     created_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        unique_together = ('driver','rated_by','order')  # one rating per driver+buyer+order
+
     def __str__(self):
-        return f"{self.rated_by.username} rated {self.driver.user.username} - {self.rating}/5"
+        return f"{self.rated_by.username} → {self.driver.user.username} ({self.rating}/5) [Order {self.order.id}]"
 
 
 # Artisan-specific data

@@ -68,7 +68,7 @@
       </div>
     {% endfor %}
 
-    {% if driver_pending %}
+    {% if driver_pending and driver %}
         <div class="review-block">
             <h3>Delivery by {{ driver.user.name }}</h3>
 

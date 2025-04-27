@@ -19,7 +19,7 @@ from decimal import Decimal
 import datetime
 from marketplace.models import Review
 from django.db.models import Avg
-from users.models import DriverProfile
+from users.models import DriverProfile, DriverRating
 
 def login_view(request):
     if request.method == 'POST':
@@ -584,12 +584,13 @@ def order_details(request, order_id):
                 break
         # if all products already reviewed, check driver
         if not pending_review and order.assigned_delivery_guy:
-            ct = ContentType.objects.get_for_model(order.assigned_delivery_guy)
+            dp = order.assigned_delivery_guy.driverprofile
+            ct = ContentType.objects.get_for_model(dp)
             if not Review.objects.filter(
-                   reviewer=request.user,
-                   content_type=ct,
-                   object_id=order.assigned_delivery_guy.id
-               ).exists():
+                reviewer=request.user,
+                content_type=ct,
+                object_id=dp.id
+            ).exists():
                 pending_review = True
 
     return render(request, 'order_details.html', {
@@ -635,16 +636,23 @@ def write_review(request, order_id):
     # check if driver needs review
     driver_pending = False
     driver_profile = None
+
     if order.assigned_delivery_guy:
-        # get the DriverProfile, not the User
-        driver_profile = order.assigned_delivery_guy.driverprofile
+        try:
+            driver_profile = order.assigned_delivery_guy.driverprofile
+        except DriverProfile.DoesNotExist:
+            # if you want, create one on the fly:
+            driver_profile, created = DriverProfile.objects.get_or_create(user=order.assigned_delivery_guy)
+        
+        # now driver_profile is guaranteed
         ct_drv = ContentType.objects.get_for_model(driver_profile)
-        if not Review.objects.filter(
-                reviewer=request.user,
-                content_type=ct_drv,
-                object_id=driver_profile.id
-            ).exists():
-            driver_pending = True
+        has_review = DriverRating.objects.filter(
+            driver=driver_profile,
+            rated_by=request.user,
+            order=order
+        ).exists()
+        driver_pending = not has_review
+
 
     if request.method == 'POST':
         # Create reviews for products
@@ -676,22 +684,24 @@ def write_review(request, order_id):
             dr_rating = int(request.POST.get("rating_driver", 0))
             dr_comment = request.POST.get("comment_driver", "").strip()
             if dr_rating:
-                ct = ContentType.objects.get_for_model(driver_profile)
-                Review.objects.create(
-                    reviewer=request.user,
-                    rating=dr_rating,
-                    comment=dr_comment,
-                    content_type=ct,
-                    object_id=driver_profile.id
+                DriverRating.objects.create(
+                    driver   = driver_profile,
+                    rated_by = request.user,
+                    order    = order,
+                    rating   = dr_rating,
+                    comment  = dr_comment
                 )
-                # update driver's avg
-                avg = Review.objects.filter(
-                    content_type=ct, object_id=driver_profile.id
-                ).aggregate(Avg('rating'))['rating__avg'] or 0
+                # update driver's avg over all DriverRating
+                avg = driver_profile.ratings.aggregate(
+                          avg=Avg('rating')
+                      )['avg'] or 0
                 driver_profile.rating = avg
                 driver_profile.save()
 
         return redirect('order_details', order_id=order.id)
+    print("Assigned driver:", order.assigned_delivery_guy)
+    print("DriverProfile:", driver_profile)
+    print("Driver pending?:", driver_pending)
 
     return render(request, 'write_review.html', {
         'order': order,
