@@ -50,7 +50,8 @@ class TrashItem(models.Model):
     listing_date = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True, null=True, blank=True)
     tags = models.CharField(max_length=255, blank=True, null=True)
-
+    rating = models.DecimalField(max_digits=3, decimal_places=2, default=0.0)
+    
     def __str__(self):
         return f"{self.material_name} - {self.trash_point}"
 

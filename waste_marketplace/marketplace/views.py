@@ -433,8 +433,8 @@ def initiate_payment(request):
         email=post_data.get("email"),
         payment_method='sslcommerz',
         total_amount=Decimal(subtotal),
-        payment_status='Pending',
-        delivery_status='Ready',
+        payment_status='pending',
+        delivery_status='ready',
     )
 
     # 3) Create its OrderItems
@@ -528,7 +528,7 @@ def payment_success(request):
     order = get_object_or_404(Order, id=order_id)
 
     # Same steps as before
-    order.payment_status = 'Paid'
+    order.payment_status = 'paid'
     order.save()
     CartItem.objects.filter(buyer=order.buyer).delete()
     

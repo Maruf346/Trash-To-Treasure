@@ -34,7 +34,7 @@
                     <th>Product</th>
                     <th>Pickup Point</th>
                     <th>Drop Point</th>
-                    <th>Date</th>
+                    <th>Payment Status</th>
                     <th>Delivery Status</th>
                     <th>Buyer Name</th>
                     <th>Contact</th>
@@ -81,8 +81,16 @@
                         {{ order.zip_code }}, {{ order.country }}
                       </td>
               
-                      <!-- Date -->
-                      <td>{{ order.created_at|date:"Y-m-d" }}</td>
+                      <!-- Payment Status -->
+                      <td>
+                        {% if order.payment_method == 'cod' %}
+                          Cash On Delivery
+                        {% elif order.payment_method == 'sslcommerz' %}
+                          Paid
+                        {% else %}
+                          {{ order.payment_status|capfirst }}
+                        {% endif %}
+                      </td>
               
                       <!-- Delivery Status -->
                       <td>
