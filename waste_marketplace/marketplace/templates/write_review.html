@@ -38,13 +38,13 @@
                 {% endif %}
             </h3>
             
-        <div class="stars">
-          <label><input type="radio" name="rating_{{ forloop.counter0 }}" value="1">★</label>
-          <label><input type="radio" name="rating_{{ forloop.counter0 }}" value="2">★</label>
-          <label><input type="radio" name="rating_{{ forloop.counter0 }}" value="3">★</label>
-          <label><input type="radio" name="rating_{{ forloop.counter0 }}" value="4">★</label>
-          <label><input type="radio" name="rating_{{ forloop.counter0 }}" value="5">★</label>
+        <div class="stars" data-index="{{ forloop.counter0 }}">
+            {% for i in "12345" %}
+                <span class="star" data-value="{{ forloop.counter|add:"-1" }}">{{ forloop.counter|add:"-1" }}</span>
+            {% endfor %}
+            <input type="hidden" name="rating_{{ forloop.counter0 }}" id="rating_{{ forloop.counter0 }}">
         </div>
+
         <textarea name="comment_{{ forloop.counter0 }}"
                   placeholder="Write your comments (optional)"></textarea>
       </div>
@@ -68,6 +68,38 @@
     <button type="submit" class="submit-review-btn">Submit Reviews</button>
   </form>
 </div>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const starBlocks = document.querySelectorAll('.stars');
+    
+        starBlocks.forEach(block => {
+            const stars = block.querySelectorAll('.star');
+            const hiddenInput = block.querySelector('input[type="hidden"]');
+    
+            stars.forEach((star, index) => {
+                star.addEventListener('mouseover', function() {
+                    stars.forEach((s, i) => {
+                        s.classList.toggle('hovered', i <= index);
+                    });
+                });
+    
+                star.addEventListener('mouseout', function() {
+                    stars.forEach((s) => s.classList.remove('hovered'));
+                });
+    
+                star.addEventListener('click', function() {
+                    hiddenInput.value = star.getAttribute('data-value');
+                    stars.forEach((s, i) => {
+                        s.classList.toggle('selected', i <= index);
+                    });
+                });
+            });
+        });
+    });
+    </script>
+    
 
 </body>
 </html>

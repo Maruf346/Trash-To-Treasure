@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import TrashItem
+from .models import TrashItem, Review
 from .models import TrashItem, UpcycledProduct, Order, OrderItem, CartItem 
 from django.contrib.auth import get_user_model
 from django import forms
@@ -26,3 +26,5 @@ class OrderAdmin(admin.ModelAdmin):
     form = OrderAdminForm
 
 admin.site.register(Order, OrderAdmin)
+
+admin.site.register(Review)
