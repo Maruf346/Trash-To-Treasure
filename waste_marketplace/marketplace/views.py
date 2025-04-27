@@ -19,7 +19,7 @@ from decimal import Decimal
 import datetime
 from marketplace.models import Review
 from django.db.models import Avg
-
+from users.models import DriverProfile
 
 def login_view(request):
     if request.method == 'POST':
@@ -698,4 +698,25 @@ def write_review(request, order_id):
         'reviewable_items': reviewable_items,
         'driver_pending': driver_pending,
         'driver': driver_profile,
+    })
+    
+@login_required
+def driver_reviews(request):
+    # only drivers may view this page
+    if request.user.role != 'driver':
+        return HttpResponseForbidden("Access denied.")
+
+    # get this driver’s profile
+    try:
+        driver = request.user.driverprofile
+    except DriverProfile.DoesNotExist:
+        return HttpResponseForbidden("No driver profile found.")
+
+    # pull all Review objects that target this DriverProfile
+    ct = ContentType.objects.get_for_model(driver)
+    reviews = Review.objects.filter(content_type=ct, object_id=driver.id).order_by('-created_at')
+
+    return render(request, 'driver_reviews.html', {
+        'driver': driver,
+        'reviews': reviews,
     })
