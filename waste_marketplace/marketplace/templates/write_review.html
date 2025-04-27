@@ -1,0 +1,67 @@
+{% load static %}
+{% include "header.html" %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Write Review - TrashToTreasure</title>
+    <link rel="stylesheet" href="{% static 'css/buyer_profile.css' %}">
+    <link rel="stylesheet" href="{% static 'css/write_review.css' %}">
+</head>
+<body>
+
+<!-- Banner Section -->
+<section class="product-banner">
+    <h2>Write Review</h2>
+    <p><a href="/driver_dashboard">Home</a> &gt; Write Review for Order #{{ order.id }}</p>
+</section>
+
+<div class="review-container">
+  <h2>Write Reviews for Order #{{ order.id }}</h2>
+  <form method="post">
+    {% csrf_token %}
+
+    {% for product in reviewable_items %}
+      <div class="review-block">
+        <h3>
+          {% if product._meta.model_name == 'upcycledproduct' %}
+            {{ product.product_name }}
+          {% else %}
+            {{ product.material_name }}
+          {% endif %}
+        </h3>
+        <div class="stars">
+          <label><input type="radio" name="rating_{{ forloop.counter0 }}" value="1">★</label>
+          <label><input type="radio" name="rating_{{ forloop.counter0 }}" value="2">★</label>
+          <label><input type="radio" name="rating_{{ forloop.counter0 }}" value="3">★</label>
+          <label><input type="radio" name="rating_{{ forloop.counter0 }}" value="4">★</label>
+          <label><input type="radio" name="rating_{{ forloop.counter0 }}" value="5">★</label>
+        </div>
+        <textarea name="comment_{{ forloop.counter0 }}"
+                  placeholder="Write your comments (optional)"></textarea>
+      </div>
+    {% endfor %}
+
+    {% if driver_pending %}
+      <div class="review-block">
+        <h3>Delivery by {{ order.assigned_delivery_guy.get_full_name }}</h3>
+        <div class="stars">
+          <label><input type="radio" name="rating_driver" value="1">★</label>
+          <label><input type="radio" name="rating_driver" value="2">★</label>
+          <label><input type="radio" name="rating_driver" value="3">★</label>
+          <label><input type="radio" name="rating_driver" value="4">★</label>
+          <label><input type="radio" name="rating_driver" value="5">★</label>
+        </div>
+        <textarea name="comment_driver"
+                  placeholder="Comment on delivery (optional)"></textarea>
+      </div>
+    {% endif %}
+
+    <button type="submit" class="submit-review-btn">Submit Reviews</button>
+  </form>
+</div>
+
+</body>
+</html>
+
+{% include "footer.html" %}

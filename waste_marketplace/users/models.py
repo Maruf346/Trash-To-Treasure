@@ -3,6 +3,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from .managers import CustomUserManager
+from django.contrib.contenttypes.fields import GenericRelation
+
 
 # Choices for role and account status
 ROLE_CHOICES = (
@@ -41,6 +43,7 @@ class DriverProfile(models.Model):
     order_number = models.PositiveIntegerField(default=0)
     profile_picture = models.ImageField(upload_to='driver_profiles/', null=True, blank=True)
     rating = models.FloatField(default=0.0)
+    reviews = GenericRelation('marketplace.Review')
     
     def update_average_rating(self):
         ratings = self.ratings.all()

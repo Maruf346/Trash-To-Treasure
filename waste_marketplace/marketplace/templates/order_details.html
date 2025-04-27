@@ -158,6 +158,15 @@
         <p><strong>Total Amount:</strong> BDT {{ order.total_amount }}</p>
     </div>
 
+    {% if pending_review %}
+      <div style="margin: 30px 0; text-align: center;">
+        <a href="{% url 'write_review' order.id %}" 
+           class="btn btn-primary review-button">
+          Write a Review
+        </a>
+      </div>
+    {% endif %}
+
     <a href="{% url 'my_orders' %}" class="back-link">← Back to My-Orders</a>
 </div>
 

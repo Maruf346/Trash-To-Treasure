@@ -6,9 +6,29 @@ from django.db import models
 from django.utils.text import slugify
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.fields import GenericRelation
 
 
 User = get_user_model()
+
+
+class Review(models.Model):
+    reviewer        = models.ForeignKey(User, on_delete=models.CASCADE)
+    rating          = models.PositiveSmallIntegerField()              # 1–5
+    comment         = models.TextField(blank=True, null=True)
+    created_at      = models.DateTimeField(auto_now_add=True)
+
+    # Generic relation to either a product or a driver
+    content_type    = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id       = models.PositiveIntegerField()
+    content_object  = GenericForeignKey('content_type', 'object_id')
+
+    class Meta:
+        unique_together = ('reviewer', 'content_type', 'object_id')  # one review per user+target
+
+    def __str__(self):
+        return f"{self.reviewer} → {self.content_object} ({self.rating}/5)"
+
 
 # Choices for condition, status, and delivery state
 CONDITION_CHOICES = [
@@ -51,6 +71,7 @@ class TrashItem(models.Model):
     last_updated = models.DateTimeField(auto_now=True, null=True, blank=True)
     tags = models.CharField(max_length=255, blank=True, null=True)
     rating = models.DecimalField(max_digits=3, decimal_places=2, default=0.0)
+    reviews = GenericRelation(Review)
     
     def __str__(self):
         return f"{self.material_name} - {self.trash_point}"
@@ -83,6 +104,7 @@ class UpcycledProduct(models.Model):
     sold_count = models.IntegerField(default=0)
     delivery_status = models.CharField(max_length=20, choices=DELIVERY_STATUS_CHOICES, default='ready')
     slug = models.SlugField(max_length=255, unique=True, blank=True)
+    reviews = GenericRelation(Review)
 
     def __str__(self):
         if self.artisan:

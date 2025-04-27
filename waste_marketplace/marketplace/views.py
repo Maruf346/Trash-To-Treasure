@@ -17,6 +17,8 @@ from django.http import HttpResponse
 from django.contrib.contenttypes.models import ContentType
 from decimal import Decimal
 import datetime
+from marketplace.models import Review
+from django.db.models import Avg
 
 
 def login_view(request):
@@ -563,15 +565,37 @@ def my_orders(request):
 
 def order_details(request, order_id):
     order = get_object_or_404(Order, id=order_id)
-
-    # You can fetch related items like this if using ForeignKey or related_name
-    ordered_items = order.items.all()  # Adjust if using another relation
+    ordered_items = order.items.all()
     for item in ordered_items:
         item.subtotal = item.quantity * item.price
-        
+
+    # only allow reviews once order is delivered or returned
+    pending_review = False
+    if order.delivery_status in ['delivered', 'returned']:
+        # check each product
+        for item in ordered_items:
+            ct = ContentType.objects.get_for_model(item.item)
+            if not Review.objects.filter(
+                   reviewer=request.user,
+                   content_type=ct,
+                   object_id=item.item.id
+               ).exists():
+                pending_review = True
+                break
+        # if all products already reviewed, check driver
+        if not pending_review and order.assigned_delivery_guy:
+            ct = ContentType.objects.get_for_model(order.assigned_delivery_guy)
+            if not Review.objects.filter(
+                   reviewer=request.user,
+                   content_type=ct,
+                   object_id=order.assigned_delivery_guy.id
+               ).exists():
+                pending_review = True
+
     return render(request, 'order_details.html', {
         'order': order,
         'ordered_items': ordered_items,
+        'pending_review': pending_review,
     })
 
 def cancel_order(request, order_id):
@@ -587,3 +611,88 @@ def cancel_order(request, order_id):
         messages.error(request, f"Order #{order.id} cannot be cancelled at this stage.")
 
     return redirect('my_orders')  # Adjust this to your actual orders list view name
+
+
+@login_required
+def write_review(request, order_id):
+    order = get_object_or_404(Order, id=order_id, buyer=request.user)
+    # only allow reviews once delivered or returned
+    if order.delivery_status not in ['delivered','returned']:
+        return redirect('order_details', order_id=order.id)
+
+    # gather items that still need a review
+    reviewable_items = []
+    for item in order.items.all():
+        ct = ContentType.objects.get_for_model(item.item)
+        already = Review.objects.filter(
+            reviewer=request.user,
+            content_type=ct,
+            object_id=item.item.id
+        ).exists()
+        if not already:
+            reviewable_items.append(item.item)
+
+    # check if driver needs review
+    driver_pending = False
+    driver = order.assigned_delivery_guy
+    if driver:
+        ct_drv = ContentType.objects.get_for_model(driver)
+        if not Review.objects.filter(
+                reviewer=request.user,
+                content_type=ct_drv,
+                object_id=driver.id
+            ).exists():
+            driver_pending = True
+
+    if request.method == 'POST':
+        # Create reviews for products
+        for idx, product in enumerate(reviewable_items):
+            rating = int(request.POST.get(f"rating_{idx}", 0))
+            comment = request.POST.get(f"comment_{idx}", "").strip()
+            if rating:
+                ct = ContentType.objects.get_for_model(product)
+                Review.objects.create(
+                    reviewer=request.user,
+                    rating=rating,
+                    comment=comment,
+                    content_type=ct,
+                    object_id=product.id
+                )
+                # update product's avg
+                avg = Review.objects.filter(
+                    content_type=ct, object_id=product.id
+                ).aggregate(Avg('rating'))['rating__avg'] or 0
+                # save back to model
+                if isinstance(product, UpcycledProduct):
+                    product.rating = avg
+                else:
+                    product.rating = avg
+                product.save()
+
+        # Create review for driver
+        if driver_pending:
+            dr_rating = int(request.POST.get("rating_driver", 0))
+            dr_comment = request.POST.get("comment_driver", "").strip()
+            if dr_rating:
+                ct = ContentType.objects.get_for_model(driver)
+                Review.objects.create(
+                    reviewer=request.user,
+                    rating=dr_rating,
+                    comment=dr_comment,
+                    content_type=ct,
+                    object_id=driver.id
+                )
+                # update driver's avg
+                avg = Review.objects.filter(
+                    content_type=ct, object_id=driver.id
+                ).aggregate(Avg('rating'))['rating__avg'] or 0
+                driver.rating = avg
+                driver.save()
+
+        return redirect('order_details', order_id=order.id)
+
+    return render(request, 'write_review.html', {
+        'order': order,
+        'reviewable_items': reviewable_items,
+        'driver_pending': driver_pending,
+    })
