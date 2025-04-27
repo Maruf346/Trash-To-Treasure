@@ -1,5 +1,6 @@
 {% load static %}
 {% include "header.html" %}
+{% load custom_filters %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -22,14 +23,14 @@
     {% csrf_token %}
 
     {% for product in reviewable_items %}
-      <div class="review-block">
-        <h3>
-          {% if product._meta.model_name == 'upcycledproduct' %}
-            {{ product.product_name }}
-          {% else %}
-            {{ product.material_name }}
-          {% endif %}
-        </h3>
+        <div class="review-block">
+            <h3>
+                {% if product.content_object|model_name == 'upcycledproduct' %}
+                    {{ product.content_object.product_name }}
+                {% else %}
+                    {{ product.content_object.material_name }}
+                {% endif %}
+            </h3>
         <div class="stars">
           <label><input type="radio" name="rating_{{ forloop.counter0 }}" value="1">★</label>
           <label><input type="radio" name="rating_{{ forloop.counter0 }}" value="2">★</label>
