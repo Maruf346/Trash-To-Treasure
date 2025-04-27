@@ -388,7 +388,10 @@
     <p class="product-meta"><span class="product-label">Last updated:</span> {{ product.last_updated }}</p>
 
     <!-- Optional Ratings Section -->
-    {% for review in product.reviews.all %}
+    <div class="ratings-section" style="margin-top: 30px;">
+      <h3>Customer Ratings</h3>
+  
+      {% for review in product.reviews.all %}
           <div class="review-card">
               <div class="review-header">
                   <div class="reviewer-info">
@@ -422,7 +425,7 @@
           <p>No reviews yet.</p>
       {% endfor %}
     </div>
-    
+  </div>    
 </div>
 
 </body>
