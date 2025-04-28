@@ -735,9 +735,11 @@ def driver_reviews(request):
     })
  
 
+@login_required
 def search_page(request):
     q = request.GET.get('q', '').strip()
     type_filter = request.GET.get('type', 'all')  # all | trash | upcycled
+    sort = request.GET.get('sort', '')  # ← new
 
     # Base QuerySets
     trash_qs = TrashItem.objects.none()
@@ -752,7 +754,7 @@ def search_page(request):
                 product_status='active'
             )
             for obj in trash_qs:
-                setattr(obj, '_stype', 'trash')
+                setattr(obj, 'stype', 'trash')
 
         if type_filter in ('all', 'upcycled'):
             upcycled_qs = UpcycledProduct.objects.filter(
@@ -763,14 +765,26 @@ def search_page(request):
                 approval_status=True
             )
             for obj in upcycled_qs:
-                setattr(obj, '_stype', 'upcycled')
+                setattr(obj, 'stype', 'upcycled')
 
     # Merge and sort by newest listing_date
     combined = sorted(
         chain(trash_qs, upcycled_qs),
-        key=lambda x: getattr(x, 'listing_date', x.created_at),
+        key=lambda x: x.listing_date,
         reverse=True
     )
+    
+     # apply sorting
+    if sort == 'price_low':
+        combined.sort(key=lambda x: x.price)
+    elif sort == 'price_high':
+        combined.sort(key=lambda x: x.price, reverse=True)
+    else:
+        # default: newest listing_date (or created_at)
+        combined.sort(
+            key=lambda x: getattr(x, 'listing_date', x.listing_date),
+            reverse=True
+        )
 
     # Paginate
     paginator = Paginator(combined, 12)  # 12 per page
@@ -780,5 +794,6 @@ def search_page(request):
     return render(request, 'search.html', {
         'query': q,
         'type_filter': type_filter,
+        'sort':         sort,     
         'page_obj': page_obj,
     })
