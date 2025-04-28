@@ -39,7 +39,7 @@
   }
   
   .search-form button {
-    background: #2575fc;
+    background: #000000;
     border: none;
     color: white;
     padding: 0 20px;
@@ -49,12 +49,13 @@
   }
   
   .search-form button:hover {
-    background: #1a5ad8;
+    background: #927344;
   }
   
   /* Results Section */
   .results-section {
     padding: 50px 20px;
+    position: relative;
   }
   
   .results-grid {
@@ -112,7 +113,7 @@
   }
   
   .view-button:hover {
-    background: #927344;;
+    background: #927344;
   }
   
   /* No Results */
@@ -161,4 +162,118 @@
 .pagination span {
   color: #555;
 }
+
+
+.results-section > select[name="sort"] {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 20px;             /* space from the edges */
+  padding: 8px 40px 8px 14px; /* space for the arrow */
+  border: 1px solid #ccc;
+  border-radius: 10px;      /* updated border-radius */
+  background: white;
+  font-size: 14px;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  appearance: none;         /* remove OS default arrow */
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D'10'%20height%3D'6'%20viewBox%3D'0%200%2010%206'%20xmlns%3D'http%3A//www.w3.org/2000/svg'%3E%3Cpath%20d%3D'M0%200l5%206%205-6z'%20fill%3D'%23666'%2F%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: calc(100% - 14px) center; /* right arrow */
+  background-size: 10px 6px;
+}
+
+/* Hover & focus */
+.results-section > select[name="sort"]:hover,
+.results-section > select[name="sort"]:focus {
+  border-color: #927344;
+  box-shadow: 0 0 5px #685231;
+  outline: none;
+}
+
+.results-section::before {
+  content: "Sort by:";
+  position: absolute;
+  top: 28px;               /* tweak to align vertically with your select */
+  right: 193px;            /* adjust so it sits just left of your dropdown’s right margin */
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+  pointer-events: none;    /* so it doesn’t block clicks */
+}
+
+/* restyle all options */
+.results-section > select[name="sort"] option {
+  background-color: #fdf8f0;   /* a very light cream */
+  color: #333;                 /* dark text */
+  padding: 4px 8px;
+}
+
+/* restyle the hovered option (Firefox, some browsers only) */
+.results-section > select[name="sort"] option:hover {
+  background-color: #e8ddc2;
+  color: #000;
+}
+
+/* restyle the selected option */
+.results-section > select[name="sort"] option:checked {
+  background-color: #927344;   /* your brand brown */
+  color: #fff;
+}
+
+/* remove Edge’s ugly down‐arrow if you like */
+.results-section > select[name="sort"]::-ms-expand {
+  display: none;
+}
+
+/* push the “All Types” text farther from the arrow on the type selector */
+.search-form select[name="type"] {
+  padding: 0 0px 0 10px;        /* top/right/bottom/left: plenty of space on the right for the arrow */
+  border: none;
+  background: white url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20width='10'%20height='6'%20viewBox='0%200%2010%206'%20xmlns='http://www.w3.org/2000/svg'%3E%3Cpath%20d='M0%200l5%206%205-6z'%20fill='%23666'/%3E%3C/svg%3E") 
+              no-repeat right 12px center;
+  appearance: none;               /* hide native arrow */
+  border-radius: 50px;            /* match your search pill */
+  font-size: 16px;
+  cursor: pointer;
+}
+
+/* on focus/hover lightly highlight */
+.search-form select[name="type"]:hover,
+.search-form select[name="type"]:focus {
+  outline: none;
+  box-shadow: 0 0 5px rgba(0,0,0,0.1);
+}
+
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .search-form {
+      flex-direction: column;
+      max-width: 90%;
+    }
   
+    .search-form input {
+      margin-bottom: 10px;
+    }
+  
+    .results-grid {
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }
+  
+    .result-card img {
+      height: 150px;
+    }
+  
+    .result-info h3 {
+      font-size: 18px;
+    }
+  
+    .price {
+      font-size: 14px;
+    }
+  
+    .view-button {
+      font-size: 12px;
+    }
+  }
