@@ -228,7 +228,7 @@
 
 /* push the “All Types” text farther from the arrow on the type selector */
 .search-form select[name="type"] {
-  padding: 0 0px 0 10px;        /* top/right/bottom/left: plenty of space on the right for the arrow */
+  padding: 0 30px 0 10px;        /* top/right/bottom/left: plenty of space on the right for the arrow */
   border: none;
   background: white url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20width='10'%20height='6'%20viewBox='0%200%2010%206'%20xmlns='http://www.w3.org/2000/svg'%3E%3Cpath%20d='M0%200l5%206%205-6z'%20fill='%23666'/%3E%3C/svg%3E") 
               no-repeat right 12px center;
