@@ -68,6 +68,7 @@ urlpatterns = [
     path('driver/delivery-history/', views.delivery_history, name='delivery_history'),
     path('orders/<int:order_id>/review/', views.write_review, name='write_review'),
     path('driver/reviews/', views.driver_reviews, name='driver_reviews'),
+    path('search/', views.search_page, name='search_results'),
 
 ]
 

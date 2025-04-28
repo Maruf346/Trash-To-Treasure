@@ -20,6 +20,9 @@ import datetime
 from marketplace.models import Review
 from django.db.models import Avg
 from users.models import DriverProfile, DriverRating
+from django.db.models import Q
+from itertools import chain
+
 
 def login_view(request):
     if request.method == 'POST':
@@ -729,4 +732,53 @@ def driver_reviews(request):
     return render(request, 'driver_reviews.html', {
         'driver':  driver,
         'reviews': reviews,
+    })
+ 
+
+def search_page(request):
+    q = request.GET.get('q', '').strip()
+    type_filter = request.GET.get('type', 'all')  # all | trash | upcycled
+
+    # Base QuerySets
+    trash_qs = TrashItem.objects.none()
+    upcycled_qs = UpcycledProduct.objects.none()
+
+    if q:
+        if type_filter in ('all', 'trash'):
+            trash_qs = TrashItem.objects.filter(
+                Q(material_name__icontains=q) |
+                Q(category__icontains=q) |
+                Q(tags__icontains=q),
+                product_status='active'
+            )
+            for obj in trash_qs:
+                setattr(obj, '_stype', 'trash')
+
+        if type_filter in ('all', 'upcycled'):
+            upcycled_qs = UpcycledProduct.objects.filter(
+                Q(product_name__icontains=q) |
+                Q(category__icontains=q) |
+                Q(tags__icontains=q),
+                product_status='active',
+                approval_status=True
+            )
+            for obj in upcycled_qs:
+                setattr(obj, '_stype', 'upcycled')
+
+    # Merge and sort by newest listing_date
+    combined = sorted(
+        chain(trash_qs, upcycled_qs),
+        key=lambda x: getattr(x, 'listing_date', x.created_at),
+        reverse=True
+    )
+
+    # Paginate
+    paginator = Paginator(combined, 12)  # 12 per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'search.html', {
+        'query': q,
+        'type_filter': type_filter,
+        'page_obj': page_obj,
     })
