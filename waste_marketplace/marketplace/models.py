@@ -7,7 +7,7 @@ from django.utils.text import slugify
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.fields import GenericRelation
-
+from django.db.models import Avg
 
 User = get_user_model()
 
@@ -73,6 +73,11 @@ class TrashItem(models.Model):
     rating = models.DecimalField(max_digits=3, decimal_places=2, default=0.0)
     reviews = GenericRelation(Review)
     
+    def update_average_rating(self):
+        avg_rating = self.reviews.aggregate(avg=Avg('rating'))['avg'] or 0.0
+        self.rating = round(avg_rating, 2)
+        self.save(update_fields=['rating'])
+    
     def __str__(self):
         return f"{self.material_name} - {self.trash_point}"
 
@@ -105,6 +110,11 @@ class UpcycledProduct(models.Model):
     delivery_status = models.CharField(max_length=20, choices=DELIVERY_STATUS_CHOICES, default='ready')
     slug = models.SlugField(max_length=255, unique=True, blank=True)
     reviews = GenericRelation(Review)
+    
+    def update_average_rating(self):
+        avg_rating = self.reviews.aggregate(avg=Avg('rating'))['avg'] or 0.0
+        self.rating = round(avg_rating, 2)
+        self.save(update_fields=['rating'])
 
     def __str__(self):
         if self.artisan:
