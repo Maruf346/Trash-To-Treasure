@@ -1,1 +1,1 @@
-web: gunicorn waste_marketplace.wsgi
+web: gunicorn waste_marketplace.wsgi:application
